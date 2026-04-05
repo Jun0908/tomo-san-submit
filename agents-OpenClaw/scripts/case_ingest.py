@@ -17,6 +17,7 @@ from openclaw_core import (
     load_case_records,
     load_public_records,
     split_csv_field,
+    to_public_case_record,
     write_case_files,
 )
 
@@ -77,15 +78,17 @@ def main():
     case_record["related_case_ids"] = [item["id"] for item in related_cases]
     case_record["related_public_info_ids"] = [item["id"] for item in related_public]
 
-    md_path, json_path = write_case_files(case_record)
+    md_path, json_path, public_json_path = write_case_files(case_record)
 
     payload = {
         "case": case_record,
+        "public_case": to_public_case_record(case_record),
         "related_cases": related_cases,
         "related_public_info": related_public,
         "files": {
             "markdown": str(md_path),
             "json": str(json_path),
+            "public_json": str(public_json_path),
         },
     }
 

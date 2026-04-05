@@ -21,6 +21,7 @@ BASE_DIR = Path(os.environ.get("OPENCLAW_DATA_ROOT", Path(__file__).resolve().pa
 DATA_DIR = BASE_DIR / "data"
 REPORTS_DIR = BASE_DIR / "reports"
 CASES_DIR = DATA_DIR / "cases"
+CASES_PUBLIC_DIR = DATA_DIR / "cases_public"
 PUBLIC_DIR = DATA_DIR / "public" / "kesennuma"
 BRIEFS_DIR = REPORTS_DIR / "briefs"
 
@@ -45,7 +46,7 @@ TAG_RULES = {
 
 def ensure_directories():
     """OpenClaw が使う出力先ディレクトリを作成する。"""
-    for path in [CASES_DIR, PUBLIC_DIR, BRIEFS_DIR]:
+    for path in [CASES_DIR, CASES_PUBLIC_DIR, PUBLIC_DIR, BRIEFS_DIR]:
         path.mkdir(parents=True, exist_ok=True)
 
 
@@ -155,6 +156,152 @@ def extract_people(text: str) -> list[str]:
     return dedupe_keep_order(matches)
 
 
+PUBLIC_STATUS_DEFAULTS = {
+    "new": (
+        "受付済み",
+        "ご相談を受け付けました。内容の整理を始めています。",
+    ),
+    "open": (
+        "受付済み",
+        "ご相談を受け付けました。内容の整理を始めています。",
+    ),
+    "triage": (
+        "確認中",
+        "案件として整理し、公開情報や関連論点との照合を進めています。",
+    ),
+    "review": (
+        "内部検討中",
+        "内部で確認を進めています。公開できる範囲で進行状況を更新します。",
+    ),
+    "waiting_user": (
+        "追加情報待ち",
+        "案件化を進めています。場所や状況の補足があると、より具体的に確認できます。",
+    ),
+    "answered": (
+        "回答・案内済み",
+        "現時点で案内できる内容を整理しました。必要に応じて次の対応を検討します。",
+    ),
+    "closed": (
+        "完了",
+        "この案件の一次対応は完了しました。",
+    ),
+}
+
+
+def build_public_timeline_entry(status: str, message: str, created_at: str | None = None) -> dict:
+    """公開向けの進行状況 1 件分を作る。"""
+    return {
+        "status": clean_text_block(status) or "受付済み",
+        "message": clean_text_block(message) or "ご相談を受け付けました。",
+        "created_at": created_at or now_jst().isoformat(),
+    }
+
+
+def needs_more_user_input(case: dict) -> bool:
+    """公開向けに追加確認が必要かをざっくり判定する。"""
+    transcript = clean_text_block(case.get("source_transcript", ""))
+    summary = clean_text_block(case.get("summary", ""))
+    location = clean_text_block(case.get("location", ""))
+    open_questions = case.get("open_questions", [])
+    return (not location) or len(transcript or summary) < 80 or len(open_questions) > 0
+
+
+def derive_public_status(case: dict) -> tuple[str, str]:
+    """内部ステータスや案件内容から公開向けステータスを決める。"""
+    internal_status = clean_text_block(case.get("status_internal") or case.get("status") or "open").lower()
+    if internal_status in PUBLIC_STATUS_DEFAULTS:
+        return PUBLIC_STATUS_DEFAULTS[internal_status]
+    if needs_more_user_input(case):
+        return PUBLIC_STATUS_DEFAULTS["waiting_user"]
+    return PUBLIC_STATUS_DEFAULTS["triage"]
+
+
+def normalize_public_fields(case: dict) -> dict:
+    """案件レコードへ公開向けフィールドを補完する。"""
+    normalized = dict(case)
+    normalized["status_internal"] = clean_text_block(
+        normalized.get("status_internal") or normalized.get("status") or "open"
+    ) or "open"
+    normalized["status"] = normalized["status_internal"]
+
+    status_public, latest_public_message = derive_public_status(normalized)
+    normalized["status_public"] = clean_text_block(normalized.get("status_public") or status_public) or status_public
+    normalized["latest_public_message"] = clean_text_block(
+        normalized.get("latest_public_message") or latest_public_message
+    ) or latest_public_message
+    normalized["requires_user_input"] = bool(
+        normalized.get("requires_user_input")
+        if "requires_user_input" in normalized
+        else needs_more_user_input(normalized)
+    )
+
+    timeline = normalized.get("public_timeline") or []
+    if timeline:
+        normalized["public_timeline"] = [
+            build_public_timeline_entry(
+                item.get("status", normalized["status_public"]),
+                item.get("message", normalized["latest_public_message"]),
+                item.get("created_at"),
+            )
+            for item in timeline
+        ]
+    else:
+        created_at = normalized.get("created_at") or now_jst().isoformat()
+        normalized["public_timeline"] = [
+            build_public_timeline_entry("受付済み", "ご相談を受け付けました。内容の整理を始めています。", created_at),
+        ]
+        if normalized["status_public"] != "受付済み":
+            normalized["public_timeline"].append(
+                build_public_timeline_entry(
+                    normalized["status_public"],
+                    normalized["latest_public_message"],
+                    normalized.get("updated_at") or created_at,
+                )
+            )
+
+    normalized["updated_at"] = clean_text_block(normalized.get("updated_at") or "") or (
+        normalized["public_timeline"][-1]["created_at"] if normalized["public_timeline"] else normalized.get("created_at")
+    )
+    return normalized
+
+
+def append_public_timeline(
+    case: dict,
+    status: str,
+    message: str,
+    *,
+    created_at: str | None = None,
+    update_latest: bool = True,
+) -> dict:
+    """案件に公開向けタイムラインを 1 件追加する。"""
+    normalized = normalize_public_fields(case)
+    entry = build_public_timeline_entry(status, message, created_at)
+    normalized["public_timeline"] = [*normalized.get("public_timeline", []), entry]
+    if update_latest:
+        normalized["status_public"] = entry["status"]
+        normalized["latest_public_message"] = entry["message"]
+        normalized["updated_at"] = entry["created_at"]
+    return normalized
+
+
+def to_public_case_record(case: dict) -> dict:
+    """フロントなどに渡せる公開向け案件 JSON を作る。"""
+    normalized = normalize_public_fields(case)
+    return {
+        "id": normalized["id"],
+        "title": normalized["title"],
+        "summary": normalized["summary"],
+        "location": normalized.get("location", ""),
+        "tags": normalized.get("tags", []),
+        "created_at": normalized["created_at"],
+        "updated_at": normalized.get("updated_at", normalized["created_at"]),
+        "status_public": normalized["status_public"],
+        "latest_public_message": normalized["latest_public_message"],
+        "requires_user_input": normalized["requires_user_input"],
+        "public_timeline": normalized.get("public_timeline", []),
+    }
+
+
 def build_case_record(
     *,
     title: str = "",
@@ -183,7 +330,7 @@ def build_case_record(
 
     case_id = stable_id("case", created_at, title, summary)
 
-    return {
+    case_record = {
         "id": case_id,
         "title": title,
         "summary": summary,
@@ -193,13 +340,16 @@ def build_case_record(
         "keywords": keywords,
         "urgency": urgency,
         "status": status,
+        "status_internal": status,
         "created_at": created_at,
+        "updated_at": created_at,
         "open_questions": dedupe_keep_order(open_questions or []),
         "next_actions": dedupe_keep_order(next_actions or []),
         "related_case_ids": dedupe_keep_order(related_case_ids or []),
         "related_public_info_ids": dedupe_keep_order(related_public_info_ids or []),
         "source_transcript": transcript,
     }
+    return normalize_public_fields(case_record)
 
 
 def case_to_markdown(case: dict) -> str:
@@ -236,13 +386,16 @@ def case_to_markdown(case: dict) -> str:
 def write_case_files(case: dict):
     """案件の Markdown と JSON を保存する。"""
     ensure_directories()
-    date_prefix = case["created_at"][:10]
-    filename = f"{date_prefix}-{slugify(case['title'], fallback='case')}"
+    normalized = normalize_public_fields(case)
+    date_prefix = normalized["created_at"][:10]
+    filename = f"{date_prefix}-{slugify(normalized['title'], fallback='case')}"
     md_path = CASES_DIR / f"{filename}.md"
     json_path = CASES_DIR / f"{filename}.json"
-    md_path.write_text(case_to_markdown(case), encoding="utf-8")
-    write_json(json_path, case)
-    return md_path, json_path
+    public_json_path = CASES_PUBLIC_DIR / f"{filename}.json"
+    md_path.write_text(case_to_markdown(normalized), encoding="utf-8")
+    write_json(json_path, normalized)
+    write_json(public_json_path, to_public_case_record(normalized))
+    return md_path, json_path, public_json_path
 
 
 def load_case_records() -> list[dict]:
@@ -251,10 +404,15 @@ def load_case_records() -> list[dict]:
     records = []
     for path in sorted(CASES_DIR.glob("*.json")):
         try:
-            records.append(json.loads(path.read_text(encoding="utf-8")))
+            records.append(normalize_public_fields(json.loads(path.read_text(encoding="utf-8"))))
         except json.JSONDecodeError:
             continue
     return sorted(records, key=lambda item: item.get("created_at", ""), reverse=True)
+
+
+def load_public_case_records() -> list[dict]:
+    """公開向け案件 JSON をまとめて返す。"""
+    return [to_public_case_record(case) for case in load_case_records()]
 
 
 def build_query_record(text: str = "", location: str = "", tags: list[str] | None = None) -> dict:
@@ -327,6 +485,7 @@ def find_related_cases(
             "summary": candidate.get("summary", ""),
             "location": candidate.get("location", ""),
             "tags": candidate.get("tags", []),
+            "status_public": candidate.get("status_public", ""),
         })
 
     results.sort(key=lambda item: (-item["score"], item["title"]))

@@ -1,38 +1,101 @@
-"use client";
+'use client';
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { createSession, loadSessions, saveSessions, Session } from '@/lib/session';
+
+import { createSession, listSessions } from '@/lib/session';
+import type { Session } from '@/lib/types';
 
 export default function HomePage() {
   const [sessions, setSessions] = useState<Session[]>([]);
+  const [isCreating, setIsCreating] = useState(false);
+  const [error, setError] = useState('');
 
-  useEffect(() => setSessions(loadSessions()), []);
+  useEffect(() => {
+    let active = true;
 
-  const start = () => {
-    const newSession = createSession();
-    const next = [newSession, ...sessions];
-    setSessions(next);
-    saveSessions(next);
-    window.location.href = `/conversation/${newSession.id}`;
+    void listSessions()
+      .then((items) => {
+        if (active) {
+          setSessions(items);
+        }
+      })
+      .catch((reason: unknown) => {
+        if (active) {
+          setError(reason instanceof Error ? reason.message : '会話一覧を取得できませんでした。');
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const start = async () => {
+    setIsCreating(true);
+    setError('');
+
+    try {
+      const session = await createSession();
+      window.location.href = `/conversation/${session.id}`;
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : '新しい相談を開始できませんでした。');
+      setIsCreating(false);
+    }
   };
 
   return (
     <div>
-      <section className="card">
-        <h2>トップページ</h2>
-        <p>新しい会話を開始して成果物（行政メモ等）を生成します。</p>
-        <button className="button" onClick={start}>新規会話開始</button>
+      <section className="card heroCard">
+        <span className="eyebrow">Public Intake MVP</span>
+        <h2>相談を受け付け、公開できる範囲の進行状況まで返す</h2>
+        <p className="lede">
+          既存の自動返信で終わらせず、相談内容を整理して案件化し、公開ユーザーには必要十分なステータスだけを返すためのフロントです。
+        </p>
+        <div className="heroActions">
+          <button className="button" onClick={start} disabled={isCreating}>
+            {isCreating ? '相談を準備中...' : '新しい相談を始める'}
+          </button>
+          <Link className="textLink" href="/tomo">
+            Tomoさんと話す
+          </Link>
+          <Link className="textLink" href="/staff">
+            スタッフ画面の入口を見る
+          </Link>
+        </div>
+        {error ? <p className="errorText">{error}</p> : null}
       </section>
+
       <section className="card">
-        <h3>過去セッション</h3>
+        <h3>この MVP で優先すること</h3>
+        <ul className="featureList">
+          <li>公開ユーザーには相談整理と公開ステータスだけを見せる</li>
+          <li>内部情報や Google 連携はここから直接触らせない</li>
+          <li>案件ページで「無視されていない」と分かる状態を作る</li>
+        </ul>
+      </section>
+
+      <section className="card">
+        <div className="sectionHeader">
+          <h3>最近の相談セッション</h3>
+          <span className="mutedText">{sessions.length} 件</span>
+        </div>
         {sessions.length === 0 ? (
-          <p>まだセッションがありません。</p>
+          <p className="mutedText">まだ相談セッションはありません。</p>
         ) : (
-          <ul>
-            {sessions.map((s) => (
-              <li key={s.id} style={{ marginBottom: '0.5rem' }}>
-                {s.id} - {s.title} - <Link href={`/conversation/${s.id}`}>続き</Link> | <Link href={`/cases/${s.id}`}>成果物</Link>
+          <ul className="sessionList">
+            {sessions.map((session) => (
+              <li key={session.id} className="sessionListItem">
+                <div>
+                  <p className="sessionTitle">{session.title}</p>
+                  <p className="mutedText">
+                    更新: {new Date(session.updatedAt).toLocaleString('ja-JP')}
+                  </p>
+                </div>
+                <div className="sessionLinks">
+                  <Link href={`/conversation/${session.id}`}>会話</Link>
+                  <Link href={`/cases/${session.id}`}>案件ページ</Link>
+                </div>
               </li>
             ))}
           </ul>

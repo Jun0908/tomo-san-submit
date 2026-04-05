@@ -1,21 +1,58 @@
 'use client';
 
-export type Message = { role: 'user' | 'agent'; text: string };
-export type Session = { id: string; title: string; createdAt: string; messages: Message[]; generated?: { id: string; title: string; summary: string; } };
+import type { ApiCaseRecord, Session } from '@/lib/types';
 
-const SESSION_KEY = 'tomo-sessions';
+async function request<T>(input: RequestInfo, init?: RequestInit): Promise<T> {
+  const response = await fetch(input, {
+    ...init,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(init?.headers ?? {}),
+    },
+    cache: 'no-store',
+  });
 
-export const loadSessions = (): Session[] => {
-  if (typeof window === 'undefined') return [];
-  try { return JSON.parse(localStorage.getItem(SESSION_KEY) || '[]'); } catch { return []; }
-};
+  if (!response.ok) {
+    let message = 'Request failed.';
 
-export const saveSessions = (sessions: Session[]) => {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(SESSION_KEY, JSON.stringify(sessions));
-};
+    try {
+      const payload = (await response.json()) as { error?: string };
+      message = payload.error ?? message;
+    } catch {
+      // Keep the generic message when the response body is not JSON.
+    }
 
-export const createSession = (): Session => {
-  const id = Date.now().toString();
-  return { id, title: `会話 ${new Date().toLocaleString()}`, createdAt: new Date().toISOString(), messages: [] };
-};
+    throw new Error(message);
+  }
+
+  return response.json() as Promise<T>;
+}
+
+export async function listSessions(): Promise<Session[]> {
+  return request<Session[]>('/api/conversations');
+}
+
+export async function createSession(): Promise<Session> {
+  return request<Session>('/api/conversations', { method: 'POST' });
+}
+
+export async function getSession(id: string): Promise<Session> {
+  return request<Session>(`/api/conversations/${id}`);
+}
+
+export async function sendSessionMessage(id: string, message: string): Promise<Session> {
+  return request<Session>(`/api/conversations/${id}/messages`, {
+    method: 'POST',
+    body: JSON.stringify({ message }),
+  });
+}
+
+export async function generateSessionCase(id: string): Promise<Session> {
+  return request<Session>(`/api/conversations/${id}/generate`, {
+    method: 'POST',
+  });
+}
+
+export async function getCase(id: string): Promise<ApiCaseRecord> {
+  return request<ApiCaseRecord>(`/api/cases/${id}`);
+}

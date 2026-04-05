@@ -1,26 +1,31 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
+
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Talking Photo - Frontend',
-  description: '会話から成果物を作るフロントエンド',
+  title: 'Public Intake Frontend',
+  description: '相談を案件化し、公開できる範囲で進行状況を返すフロントエンド。',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
       <body>
-        <header style={{ background: '#1c3a7f', color: '#fff', padding: '1rem' }}>
-          <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h1 style={{ margin: 0, fontSize: '1.2rem' }}>Talking Photo</h1>
-            <nav style={{ display: 'flex', gap: '1rem' }}>
-              <a href="/">トップ</a>
-              <a href="/conversation/0">会話</a>
-              <a href="/cases/0">案件</a>
+        <header className="siteHeader">
+          <div className="container siteHeaderInner">
+            <div>
+              <p className="siteLabel">Political Intake</p>
+              <h1>公開相談フロント</h1>
+            </div>
+            <nav className="siteNav">
+              <Link href="/">トップ</Link>
+              <Link href="/tomo">Tomoさんと話す</Link>
+              <Link href="/staff">スタッフ入口</Link>
             </nav>
           </div>
         </header>
-        <main className="container">{children}</main>
+        <main className="container pageShell">{children}</main>
       </body>
     </html>
   );

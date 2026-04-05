@@ -62,6 +62,8 @@ def main():
 
     for index, item in enumerate(results, start=1):
         print(f"{index}. {item['title']} | score={item['score']} | id={item['id']}")
+        if item.get("status_public"):
+            print(f"   公開ステータス: {item['status_public']}")
         if item.get("location"):
             print(f"   場所: {item['location']}")
         if item.get("tags"):

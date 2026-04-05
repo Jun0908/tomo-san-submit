@@ -22,11 +22,14 @@ def build_report(cases: list[dict], public_records: list[dict]) -> tuple[list[di
             {
                 "case_id": case["id"],
                 "case_title": case["title"],
+                "status_public": case.get("status_public", ""),
                 "related_public_info": matches,
             }
         )
 
         lines.append(f"## {case['title']}")
+        if case.get("status_public"):
+            lines.append(f"- 公開ステータス: {case['status_public']}")
         if matches:
             for item in matches:
                 lines.append(f"- {item['title']} ({item['published_at']})")
