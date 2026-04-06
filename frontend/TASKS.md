@@ -9,12 +9,37 @@
 
 このファイルは `frontend/` で作業するときの最短ガイドです。
 細かい背景は `../plan/2026-04-05_public-intake-security-plan.md` を参照しつつ、日々の実装はまずここだけ見れば進められるようにしています。
+Frontend と OpenClaw の接続仕様は `../plan/2026-04-06_frontend-openclaw-integration-plan.md` を基準にします。
 
 ## Working Rule
 
 - 公開ユーザーに見せるのは「相談の整理」と「公開ステータス」まで
 - Google / Telegram / Obsidian などの内部機能をフロントから直接触らせない
 - まずは公開向け MVP を優先し、内部画面や高度な自動化は後回しでよい
+
+## Immediate Next
+
+- [ ] `lib/server/openclaw-bridge.ts` を追加する
+- [ ] OpenClaw の snake_case JSON を `PublicCase` に変換する
+- [ ] `/api/cases/[id]` を OpenClaw 公開 JSON 優先に切り替える
+- [ ] `/staff` で `data/cases_public/latest.json` 相当の一覧を read-only 表示する
+- [ ] `/api/conversations/[id]/generate` を OpenClaw ingest へつなぐ
+
+### Scope
+
+- `lib/server/openclaw-bridge.ts`
+- `lib/server/store.ts`
+- `lib/types.ts`
+- `app/api/cases/[id]/route.ts`
+- `app/api/conversations/[id]/generate/route.ts`
+- `app/staff/page.tsx`
+
+### Done When
+
+- frontend から OpenClaw 公開 JSON を読める
+- 案件ページが session 内モックだけでなく OpenClaw の最新状態を返せる
+- staff 画面で公開案件の状態確認ができる
+- 会話から OpenClaw 案件ドラフトを生成できる
 
 ## Priority 1
 

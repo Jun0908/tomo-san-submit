@@ -86,7 +86,7 @@ def main():
         print(json.dumps(payload, ensure_ascii=False, indent=2))
         return
 
-    print(f"✅ 公開情報を同期しました: {len(records)}件")
+    print(f"[ok] 公開情報を同期しました: {len(records)}件")
     for item in records[:5]:
         print(f"- {item['title']} ({item['published_at']})")
 

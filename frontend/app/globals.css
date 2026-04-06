@@ -327,6 +327,33 @@ a:hover {
   padding: 1rem;
 }
 
+.staffForm {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.staffField {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.staffField input {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  background: #fff;
+  font: inherit;
+}
+
+.credentialLine {
+  margin: 0.35rem 0;
+}
+
+.credentialLine code {
+  font-size: 0.95rem;
+}
+
 .tomoBubble p {
   margin-bottom: 0;
   line-height: 1.6;

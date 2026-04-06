@@ -15,9 +15,18 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Iterable
 
+try:
+    from dotenv import load_dotenv
+except ImportError:  # pragma: no cover - optional dependency for local setup
+    load_dotenv = None
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if load_dotenv is not None:
+    load_dotenv(PROJECT_ROOT / ".env", override=False)
 
 JST = timezone(timedelta(hours=9))
-BASE_DIR = Path(os.environ.get("OPENCLAW_DATA_ROOT", Path(__file__).resolve().parents[1]))
+BASE_DIR = Path(os.environ.get("OPENCLAW_DATA_ROOT", PROJECT_ROOT))
 DATA_DIR = BASE_DIR / "data"
 REPORTS_DIR = BASE_DIR / "reports"
 CASES_DIR = DATA_DIR / "cases"
@@ -413,6 +422,15 @@ def load_case_records() -> list[dict]:
 def load_public_case_records() -> list[dict]:
     """公開向け案件 JSON をまとめて返す。"""
     return [to_public_case_record(case) for case in load_case_records()]
+
+
+def write_public_case_latest_snapshot() -> tuple[Path, list[dict]]:
+    """公開向け案件一覧 latest.json を再生成する。"""
+    ensure_directories()
+    records = load_public_case_records()
+    latest_path = CASES_PUBLIC_DIR / "latest.json"
+    write_json(latest_path, records)
+    return latest_path, records
 
 
 def build_query_record(text: str = "", location: str = "", tags: list[str] | None = None) -> dict:

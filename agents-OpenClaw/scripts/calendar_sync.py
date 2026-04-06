@@ -184,7 +184,7 @@ def save_today_calendar(enriched_events):
     json_path = CALENDAR_DIR / "today.json"
     markdown_path.write_text("\n".join(lines).strip() + "\n", encoding="utf-8")
     write_json(json_path, {"generated_at": NOW.isoformat(), "events": enriched_events})
-    print(f"✅ カレンダー保存完了: {markdown_path}")
+    print(f"[ok] カレンダー保存完了: {markdown_path}")
 
 
 def write_legacy_meeting_prep(brief: dict):
@@ -205,7 +205,7 @@ def write_legacy_meeting_prep(brief: dict):
     lines.extend(["", "## 関連する公開情報"])
     lines.extend([f"- {item['title']}" for item in brief["related_public_info"]] or ["- 該当なし"])
     output_path.write_text("\n".join(lines).strip() + "\n", encoding="utf-8")
-    print(f"🔔 MTG準備レポート生成: {output_path}")
+    print(f"[info] MTG準備レポート生成: {output_path}")
 
 
 def check_upcoming_meetings(enriched_events, cases, public_records):
@@ -229,12 +229,12 @@ def check_upcoming_meetings(enriched_events, cases, public_records):
         briefs.append(brief)
 
     if not briefs:
-        print(f"ℹ️ {BRIEF_WINDOW_HOURS}時間以内の予定はありません。")
+        print(f"[info] {BRIEF_WINDOW_HOURS}時間以内の予定はありません。")
 
 
 def main():
     args = parse_args()
-    print(f"📅 カレンダー同期開始: {NOW}")
+    print(f"[info] カレンダー同期開始: {NOW}")
 
     cases = load_case_records()
     public_records = load_public_records()

@@ -22,11 +22,12 @@ from pathlib import Path
 import requests
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
+from openclaw_core import BASE_DIR
 
 # ── 設定 ──────────────────────────────────────────────
 JST = timezone(timedelta(hours=9))
 TODAY = datetime.now(JST).strftime("%Y-%m-%d")
-OUTPUT_DIR = Path("data/gmail")
+OUTPUT_DIR = BASE_DIR / "data" / "gmail"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 OUTPUT_FILE = OUTPUT_DIR / f"{TODAY}.md"
 
@@ -151,11 +152,11 @@ def save_as_markdown(emails: list):
                 lines.append("")
 
     OUTPUT_FILE.write_text("\n".join(lines), encoding="utf-8")
-    print(f"✅ 保存完了: {OUTPUT_FILE}  ({len(emails)}件)")
+    print(f"[ok] 保存完了: {OUTPUT_FILE} ({len(emails)}件)")
 
 
 def main():
-    print(f"📧 Gmail 同期開始: {datetime.now(JST)}")
+    print(f"[info] Gmail 同期開始: {datetime.now(JST)}")
     creds = get_credentials()
     service = build("gmail", "v1", credentials=creds)
     emails = fetch_emails(service)

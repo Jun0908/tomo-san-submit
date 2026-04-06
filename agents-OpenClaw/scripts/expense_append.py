@@ -13,6 +13,7 @@ from pathlib import Path
 
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
+from openclaw_core import BASE_DIR
 
 # ── 設定 ──────────────────────────────────────────────
 JST = timezone(timedelta(hours=9))
@@ -20,7 +21,7 @@ NOW = datetime.now(JST)
 TODAY_STR = NOW.strftime("%Y-%m-%d")
 MONTH_STR = NOW.strftime("%Y-%m")
 
-EXPENSES_DIR = Path("data/expenses")
+EXPENSES_DIR = BASE_DIR / "data" / "expenses"
 EXPENSES_DIR.mkdir(parents=True, exist_ok=True)
 OUTPUT_FILE = EXPENSES_DIR / f"{MONTH_STR}.md"
 
@@ -139,11 +140,11 @@ def append_expenses(expenses: list, existing_ids: set):
 
             f.write(f"| {e['date']} | {subject_short} | {amount_display} | {sender_short} | <!--msg:{e['id']}-->\n")
 
-    print(f"💰 経費 {len(new_expenses)}件 を追記しました: {OUTPUT_FILE}")
+    print(f"[ok] 経費 {len(new_expenses)}件を追記しました: {OUTPUT_FILE}")
 
 
 def main():
-    print(f"💰 経費トラッキング開始: {NOW}")
+    print(f"[info] 経費トラッキング開始: {NOW}")
     creds = get_credentials()
     service = build("gmail", "v1", credentials=creds)
     expenses = fetch_expense_emails(service)

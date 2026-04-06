@@ -1,73 +1,159 @@
 # agents-OpenClaw
 
-OpenClaw を政治家秘書ユースケース向けに使うための、軽量な業務支援ワークスペースです。
-Obsidian ノート、同期済みデータ、案件管理スクリプトをひとつのフォルダにまとめて、日々の相談・予定・公開情報を横断的に参照できるようにしています。
+OpenClaw を業務支援用に使うためのワークスペースです。  
+Gmail、Google Calendar、Google Tasks、公開情報、案件メモ、Obsidian ノートをまとめて扱います。
 
 ## できること
 
-- Gmail を日次ダイジェストとして `data/gmail/` に保存
+- Gmail の要点を `data/gmail/` に保存
 - Google Calendar の予定を `data/calendar/` に保存
-- 予定に関連する案件・公開情報をもとに準備ブリーフを `reports/` に生成
-- Google Tasks の期限を確認し、Telegram に通知
-- Gmail から領収書・請求書系メールを拾って `data/expenses/` に追記
-- 相談内容から案件メモを `data/cases/` に生成
-- 既存案件の類似検索
-- 気仙沼市議会 RSS から公開情報を取得し、案件との関連候補を作成
-- Obsidian ノートと `MEMORY.md` を AI の参照用コンテキストとして運用
+- 予定に関連する案件や公開情報をもとに `reports/` へ準備ブリーフを生成
+- Google Tasks の期限チェックと Telegram 通知
+- Gmail から経費系メールを拾って `data/expenses/` に追記
+- 相談内容から案件メモを `data/cases/` に保存
+- 気仙沼市議会の公開情報を `data/public/kesennuma/` に保存
+- Obsidian ノートと `MEMORY.md` を OpenClaw の参照コンテキストとして利用
 
-## ディレクトリ概要
+## Lightsail Quick Start
+
+AWS Lightsail の Linux で動かす場合は、まずこの手順だけ見れば動かせます。
+
+### 1. サーバー準備
+
+```bash
+sudo apt update
+sudo apt install -y git python3 python3-venv python3-pip
+```
+
+### 2. GitHub から取得
+
+```bash
+cd /opt
+sudo git clone <YOUR_GITHUB_REPO_URL> agents-OpenClaw
+sudo chown -R $USER:$USER /opt/agents-OpenClaw
+cd /opt/agents-OpenClaw
+```
+
+### 3. Python 環境作成
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### 4. `.env` を作成
+
+```bash
+cp .env.example .env
+```
+
+最低限、以下を `.env` に設定します。
+
+- `OPENCLAW_DATA_ROOT=/opt/agents-OpenClaw`
+- `BRIEF_WINDOW_HOURS=24`
+- `GOOGLE_CLIENT_ID=...`
+- `GOOGLE_CLIENT_SECRET=...`
+- `GOOGLE_REFRESH_TOKEN=...`
+- `GMAIL_CLIENT_ID=...`
+- `GMAIL_CLIENT_SECRET=...`
+- `GMAIL_REFRESH_TOKEN=...`
+
+Telegram 通知を使う場合だけ以下も設定します。
+
+- `TELEGRAM_BOT_TOKEN=...`
+- `TELEGRAM_CHAT_ID=...`
+
+### 5. 一発実行
+
+定期実行系はこれ一つでまとめて動きます。
+
+```bash
+cd /opt/agents-OpenClaw
+source .venv/bin/activate
+python scripts/run_all.py
+```
+
+実行対象:
+
+- `scripts/public_info_sync.py`
+- `scripts/public_info_linker.py`
+- `scripts/public_case_export.py`
+- `scripts/calendar_sync.py`
+- `scripts/email_manager.py`
+- `scripts/expense_append.py`
+- `scripts/task_reminder.py`
+
+どれか1つ失敗した時点で止めたい場合だけ `--fail-fast` を付けます。
+
+```bash
+python scripts/run_all.py --fail-fast
+```
+
+### 6. cron で定期実行
+
+```bash
+crontab -e
+```
+
+例:
+
+```cron
+15 * * * * cd /opt/agents-OpenClaw && . .venv/bin/activate && python scripts/run_all.py >> /var/log/openclaw-run-all.log 2>&1
+```
+
+### 7. 手動確認
+
+```bash
+python scripts/public_info_sync.py
+python scripts/case_ingest.py --title "通学路安全" --summary "横断歩道付近の見通しが悪い" --location "鹿折地区"
+python scripts/case_search.py --query "通学路 横断歩道" --location "鹿折地区"
+```
+
+詳しい Linux 手順は [SETUP_LIGHTSAIL.md](./SETUP_LIGHTSAIL.md) も参照してください。
+
+## ディレクトリ構成
 
 ```text
 agents-OpenClaw/
 ├─ MEMORY.md
+├─ README.md
 ├─ SETUP.md
+├─ SETUP_LIGHTSAIL.md
+├─ requirements.txt
+├─ .env.example
 ├─ scripts/
 ├─ data/
-│  ├─ calendar/
-│  ├─ cases/
-│  ├─ expenses/
-│  ├─ gmail/
-│  ├─ public/kesennuma/
-│  └─ tasks/
 ├─ obsidian/
-│  ├─ 00_MOC/
-│  ├─ 03_Projects/
-│  ├─ 10-私の周りの人/
-│  ├─ 20_地域/
-│  ├─ 30_テーマ/
-│  └─ 40_公開情報/
 └─ reports/
-   ├─ briefs/
-   ├─ daily-briefing/
-   └─ meeting-prep/
 ```
 
-## 主要ファイル
+主な出力先:
 
-- `MEMORY.md`
-  手動で更新する短期記憶。進行中案件、関係者、運用ルールをまとめます。
-- `SETUP.md`
-  GitHub、Google OAuth、Telegram の設定手順です。
-- `obsidian/00_MOC/OpenClaw_政治家秘書MOC.md`
-  Obsidian 上の入口ページです。
+- Gmail: `data/gmail/YYYY-MM-DD.md`
+- Calendar: `data/calendar/today.md`, `data/calendar/today.json`
+- Tasks: `data/tasks/today.md`
+- Expenses: `data/expenses/YYYY-MM.md`
+- Cases: `data/cases/*.md`, `data/cases/*.json`
+- Public info: `data/public/kesennuma/latest.md`, `data/public/kesennuma/latest.json`
+- Briefs: `reports/briefs/`, `reports/meeting-prep/`
 
-## 動かし方
-
-このフォルダを作業ルートとして使います。特に `email_manager.py`、`task_reminder.py`、`expense_append.py` は相対パスで出力するため、`agents-OpenClaw` 直下で実行してください。
+## 個別コマンド
 
 ```bash
-cd agents-OpenClaw
+python scripts/email_manager.py
+python scripts/calendar_sync.py
+python scripts/task_reminder.py
+python scripts/expense_append.py
+python scripts/public_info_sync.py
+python scripts/public_info_linker.py
+python scripts/public_case_export.py
+python scripts/case_ingest.py --title "通学路安全" --summary "横断歩道付近の見通しが悪い" --location "鹿折地区"
+python scripts/case_search.py --query "通学路 横断歩道" --location "鹿折地区"
 ```
 
-Python 3.10 以上を想定しています。最低限、以下のライブラリが必要です。
-
-```bash
-pip install google-api-python-client google-auth google-auth-oauthlib python-dateutil requests
-```
-
-認証情報の作成は [SETUP.md](./SETUP.md) を参照してください。
-
-## 必要な環境変数
+## 環境変数
 
 Google Calendar / Tasks:
 
@@ -81,95 +167,27 @@ Gmail:
 - `GMAIL_CLIENT_SECRET`
 - `GMAIL_REFRESH_TOKEN`
 
-Telegram 通知:
+Telegram:
 
 - `TELEGRAM_BOT_TOKEN`
 - `TELEGRAM_CHAT_ID`
 
-任意:
+その他:
 
 - `OPENCLAW_DATA_ROOT`
-  出力先ルートを変更したいときに使用
 - `BRIEF_WINDOW_HOURS`
-  何時間先までの予定に対して準備ブリーフを作るか。既定値は `24`
 
-## 主なコマンド
+`.env` をリポジトリ直下に置くと、主要スクリプトが自動で読み込みます。
 
-Gmail ダイジェスト:
+## Obsidian と OpenClaw の使い分け
 
-```bash
-python scripts/email_manager.py
-```
-
-カレンダー同期:
-
-```bash
-python scripts/calendar_sync.py
-```
-
-ローカル JSON を使ったカレンダー確認:
-
-```bash
-python scripts/calendar_sync.py --events-file sample-events.json
-```
-
-タスク確認と Telegram 通知:
-
-```bash
-python scripts/task_reminder.py
-```
-
-経費メールの追記:
-
-```bash
-python scripts/expense_append.py
-```
-
-相談内容から案件を登録:
-
-```bash
-python scripts/case_ingest.py --title "鹿折地区の通学路安全" --summary "保護者からの安全対策相談" --location "鹿折地区" --people "佐藤花子,山田太郎" --tags "交通安全,子育て,教育" --open-question "危険箇所の正確な位置" --next-action "学校側の把握状況を確認する"
-```
-
-類似案件を検索:
-
-```bash
-python scripts/case_search.py --query "通学路の横断歩道が危険" --location "鹿折地区"
-```
-
-公開情報を同期:
-
-```bash
-python scripts/public_info_sync.py
-```
-
-案件と公開情報の関連候補を作成:
-
-```bash
-python scripts/public_info_linker.py
-```
-
-## どこに出力されるか
-
-- Gmail: `data/gmail/YYYY-MM-DD.md`
-- カレンダー: `data/calendar/today.md`, `data/calendar/today.json`
-- タスク: `data/tasks/today.md`
-- 経費: `data/expenses/YYYY-MM.md`
-- 案件: `data/cases/*.md`, `data/cases/*.json`
-- 公開情報: `data/public/kesennuma/latest.md`, `latest.json`
-- 準備ブリーフ: `reports/briefs/`, `reports/meeting-prep/`
-
-## Obsidian との使い分け
-
-- `obsidian/` は人が読む・育てる知識ベースです
-- `data/` はスクリプトが生成する構造化データです
-- `reports/` は会議前確認などの派生アウトプットです
-- `MEMORY.md` は AI に短期コンテキストを渡すためのメモです
-
-まずは [OpenClaw_政治家秘書MOC.md](./obsidian/00_MOC/OpenClaw_政治家秘書MOC.md) を起点に読むと全体像を追いやすいです。
+- `obsidian/` は人が育てる知識ベース
+- `data/` はスクリプトが生成する構造化データ
+- `reports/` は面会前確認などの派生アウトプット
+- `MEMORY.md` は OpenClaw に短期コンテキストを渡すためのメモ
 
 ## 補足
 
-- `SETUP.md` は GitHub Actions での定期実行を前提に書かれています
-- 現在のこのフォルダには GitHub Actions の workflow 定義は含まれていません
-- そのため、まずは手動実行で確認し、必要なら別途 `.github/workflows/` を追加する運用が自然です
+- `.env` は GitHub に push しない
+- Linux では `python scripts/run_all.py` を定期実行の入口にするのがおすすめ
+- GitHub Actions 用の既存 workflow は残していますが、Lightsail 運用なら cron の方がシンプルです

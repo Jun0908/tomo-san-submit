@@ -17,6 +17,36 @@
 - 公開に出す情報と内部だけで持つ情報を分ける
 - GitHub Actions や Secrets は private 運用前提で、repo には入れない
 
+## Handoff Note
+
+- MVP の主軸は Next.js frontend
+- Telegram は通知 / 承認 / 簡易 command の補助にする
+- OpenClaw は API ではなく、相談処理 / sync / case generation を担う処理基盤
+- 上位設計は parent repo 側で考える: `frontend -> API -> OpenClaw`
+- `agents-OpenClaw/` 側では UI の実装や設計は持たない
+
+## Immediate Next
+
+- [ ] frontend 連携用の read 契約を固定する
+- [ ] frontend 連携用の ingest 契約を固定する
+- [ ] `data/cases_public/latest.json` を frontend が安定して読める形に保つ
+- [ ] `case_ingest.py --json` を公開入力向けの専用入口として明文化する
+- [ ] 詳細な接続仕様を `../plan/2026-04-06_frontend-openclaw-integration-plan.md` に合わせる
+
+### Scope
+
+- `scripts/openclaw_core.py`
+- `scripts/case_ingest.py`
+- `scripts/public_case_export.py`
+- `README.md`
+
+### Done When
+
+- frontend が読む公開 JSON の shape が安定する
+- ingest の返却 JSON から frontend が案件ページを組み立てられる
+- 公開 API から呼んでよい OpenClaw の入口が 1 本に限定される
+- Gmail / Calendar / Tasks / Telegram 系が公開経路から切り離される
+
 ## Priority 1
 
 - [ ] 案件データに公開用ステータス項目を追加する

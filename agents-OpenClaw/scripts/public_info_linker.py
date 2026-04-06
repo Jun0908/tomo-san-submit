@@ -51,7 +51,7 @@ def main():
     write_json(json_path, rows)
     md_path.write_text(markdown, encoding="utf-8")
 
-    print(f"✅ リンク候補を保存しました: {json_path}")
+    print(f"[ok] リンク候補を保存しました: {json_path}")
     print(f"案件数: {len(cases)} / 公開情報数: {len(public_records)}")
 
 

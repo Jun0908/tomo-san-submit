@@ -5,14 +5,12 @@ public_case_export.py
 
 from __future__ import annotations
 
-from openclaw_core import CASES_PUBLIC_DIR, load_public_case_records, write_json
+from openclaw_core import write_public_case_latest_snapshot
 
 
 def main():
-    records = load_public_case_records()
-    latest_path = CASES_PUBLIC_DIR / "latest.json"
-    write_json(latest_path, records)
-    print(f"✅ 公開向け案件一覧を出力しました: {latest_path}")
+    latest_path, records = write_public_case_latest_snapshot()
+    print(f"[ok] 公開向け案件一覧を出力しました: {latest_path}")
     print(f"件数: {len(records)}")
 
 

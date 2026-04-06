@@ -27,6 +27,14 @@ export type PublicCase = {
   timeline: PublicTimelineEntry[];
 };
 
+export type IntakeDraftInput = {
+  title: string;
+  summary: string;
+  transcript: string;
+  location: string;
+  tags: string[];
+};
+
 export type Session = {
   id: string;
   title: string;
@@ -34,6 +42,8 @@ export type Session = {
   updatedAt: string;
   messages: Message[];
   generated?: PublicCase;
+  openClawCaseId?: string;
+  openClawPublicJsonPath?: string;
 };
 
 export type ApiCaseRecord = {

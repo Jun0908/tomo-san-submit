@@ -1,7 +1,8 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 
-import { appendMessage, buildPublicCase, createInitialSession } from '@/lib/server/mock-intake';
+import { appendMessage, buildIntakeDraft, createInitialSession } from '@/lib/server/mock-intake';
+import { getOpenClawPublicCase, ingestOpenClawCaseDraft } from '@/lib/server/openclaw-bridge';
 import type { ApiCaseRecord, Session } from '@/lib/types';
 
 type StoreShape = {
@@ -25,7 +26,10 @@ async function ensureStore(): Promise<void> {
 async function readStore(): Promise<StoreShape> {
   await ensureStore();
   const raw = await fs.readFile(DATA_FILE, 'utf8');
-  return JSON.parse(raw) as StoreShape;
+  const parsed = JSON.parse(raw) as Partial<StoreShape>;
+  return {
+    sessions: Array.isArray(parsed.sessions) ? parsed.sessions : [],
+  };
 }
 
 async function writeStore(store: StoreShape): Promise<void> {
@@ -73,11 +77,19 @@ export async function generateStoredCase(id: string): Promise<Session | null> {
     return null;
   }
 
-  const generated = buildPublicCase(store.sessions[index]);
+  const draft = buildIntakeDraft(store.sessions[index]);
+
+  if (!draft.transcript) {
+    throw new Error('相談内容がまだありません。');
+  }
+
+  const ingestResult = await ingestOpenClawCaseDraft(draft);
   const updated: Session = {
     ...store.sessions[index],
-    updatedAt: generated.updatedAt,
-    generated,
+    updatedAt: ingestResult.publicCase.updatedAt,
+    generated: ingestResult.publicCase,
+    openClawCaseId: ingestResult.openClawCaseId,
+    openClawPublicJsonPath: ingestResult.publicJsonPath,
   };
   store.sessions[index] = updated;
   await writeStore(store);
@@ -85,9 +97,35 @@ export async function generateStoredCase(id: string): Promise<Session | null> {
 }
 
 export async function getStoredCaseRecord(id: string): Promise<ApiCaseRecord | null> {
-  const session = await getStoredSession(id);
+  const store = await readStore();
+  const index = store.sessions.findIndex((session) => session.id === id);
 
-  if (!session?.generated) {
+  if (index === -1) {
+    return null;
+  }
+
+  const session = store.sessions[index];
+
+  if (session.openClawCaseId) {
+    const latest = await getOpenClawPublicCase(session.openClawCaseId, session.openClawPublicJsonPath);
+
+    if (latest) {
+      store.sessions[index] = {
+        ...session,
+        updatedAt: latest.updatedAt,
+        generated: latest,
+      };
+      await writeStore(store);
+
+      return {
+        sessionId: session.id,
+        sessionTitle: session.title,
+        case: latest,
+      };
+    }
+  }
+
+  if (!session.generated) {
     return null;
   }
 

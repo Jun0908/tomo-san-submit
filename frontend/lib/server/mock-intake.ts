@@ -1,4 +1,4 @@
-import type { Message, PublicCase, PublicTimelineEntry, Session } from '@/lib/types';
+import type { IntakeDraftInput, Message, PublicCase, PublicTimelineEntry, Session } from '@/lib/types';
 
 function nowIso(): string {
   return new Date().toISOString();
@@ -39,6 +39,20 @@ function detectThemes(text: string): string[] {
 function buildTitle(text: string, area?: string): string {
   const headline = clip(text.replace(/\s+/g, ' ').trim(), 28) || '新しい相談';
   return area ? `${area}に関する相談` : headline;
+}
+
+export function buildIntakeDraft(session: Session): IntakeDraftInput {
+  const transcript = collectUserText(session.messages).trim();
+  const location = detectArea(transcript) ?? '';
+  const tags = detectThemes(transcript);
+
+  return {
+    title: buildTitle(transcript || session.title, location || undefined),
+    summary: clip(transcript || session.title, 180),
+    transcript,
+    location,
+    tags,
+  };
 }
 
 function buildAssistantReply(session: Session, message: string): string {
@@ -91,9 +105,10 @@ function buildTimeline(
 }
 
 export function buildPublicCase(session: Session): PublicCase {
-  const transcript = collectUserText(session.messages);
-  const area = detectArea(transcript);
-  const themeTags = detectThemes(transcript);
+  const draft = buildIntakeDraft(session);
+  const transcript = draft.transcript;
+  const area = draft.location || undefined;
+  const themeTags = draft.tags;
   const requiresUserInput = !area || transcript.length < 80;
   const updatedAt = nowIso();
   const statusPublic = requiresUserInput ? '追加情報待ち' : '確認中';
@@ -111,7 +126,7 @@ export function buildPublicCase(session: Session): PublicCase {
 
   return {
     id: `case-${session.id}`,
-    title: buildTitle(transcript || session.title, area),
+    title: draft.title,
     summary: summaryLines.join('\n'),
     statusPublic,
     latestPublicMessage,

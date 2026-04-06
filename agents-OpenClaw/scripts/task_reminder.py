@@ -18,13 +18,14 @@ from pathlib import Path
 import requests
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
+from openclaw_core import BASE_DIR
 
 # ── 設定 ──────────────────────────────────────────────
 JST = timezone(timedelta(hours=9))
 NOW = datetime.now(JST)
 TODAY_STR = NOW.strftime("%Y-%m-%d")
 
-TASKS_DIR = Path("data/tasks")
+TASKS_DIR = BASE_DIR / "data" / "tasks"
 TASKS_DIR.mkdir(parents=True, exist_ok=True)
 
 
@@ -47,16 +48,16 @@ def send_telegram(message: str):
     chat_id   = os.environ.get("TELEGRAM_CHAT_ID", "")
 
     if not bot_token or not chat_id:
-        print(f"⚠️  Telegram 未設定のため通知スキップ: {message[:50]}")
+        print(f"[warn] Telegram 未設定のため通知スキップ: {message[:50]}")
         return
 
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
     payload = {"chat_id": chat_id, "text": message, "parse_mode": "HTML"}
     response = requests.post(url, json=payload, timeout=10)
     if response.ok:
-        print(f"📨 Telegram 通知送信: {message[:50]}...")
+        print(f"[ok] Telegram 通知送信: {message[:50]}...")
     else:
-        print(f"❌ Telegram 通知失敗: {response.text}")
+        print(f"[error] Telegram 通知失敗: {response.text}")
 
 
 def fetch_tasks(service):
@@ -131,11 +132,11 @@ def save_tasks_markdown(tasks):
 
     output_file = TASKS_DIR / "today.md"
     output_file.write_text("\n".join(lines), encoding="utf-8")
-    print(f"✅ タスク保存完了: {output_file} ({len(tasks)}件)")
+    print(f"[ok] タスク保存完了: {output_file} ({len(tasks)}件)")
 
 
 def main():
-    print(f"✅ タスクチェック開始: {NOW}")
+    print(f"[info] タスクチェック開始: {NOW}")
     creds = get_credentials()
     service = build("tasks", "v1", credentials=creds)
     tasks = fetch_tasks(service)
@@ -149,7 +150,7 @@ def main():
             send_telegram(message)
             notified += 1
 
-    print(f"📨 通知送信数: {notified}件")
+    print(f"[info] 通知送信数: {notified}件")
 
 
 if __name__ == "__main__":

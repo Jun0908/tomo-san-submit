@@ -7,11 +7,17 @@ type Context = {
 };
 
 export async function POST(_request: Request, { params }: Context) {
-  const session = await generateStoredCase(params.id);
+  try {
+    const session = await generateStoredCase(params.id);
 
-  if (!session) {
-    return NextResponse.json({ error: 'Conversation not found.' }, { status: 404 });
+    if (!session) {
+      return NextResponse.json({ error: 'Conversation not found.' }, { status: 404 });
+    }
+
+    return NextResponse.json(session);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Case generation failed.';
+    const status = message === '相談内容がまだありません。' ? 400 : 500;
+    return NextResponse.json({ error: message }, { status });
   }
-
-  return NextResponse.json(session);
 }
