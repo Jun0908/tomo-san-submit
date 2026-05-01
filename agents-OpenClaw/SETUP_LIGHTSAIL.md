@@ -1,6 +1,14 @@
 # OpenClaw on AWS Lightsail
 
-AWS Lightsail の Linux 上で、このリポジトリを GitHub から入れて動かすための最短手順です。
+AWS Lightsail の Linux 上で、OpenClaw を `政治家秘書` として動かすための最短手順です。
+
+この構成で動かすものは 2 つです。
+
+- 定期実行: `python scripts/run_all.py`
+- Telegram 常駐 bot: `python scripts/telegram_bot.py --loop`
+
+`run_all.py` は情報収集とブリーフ生成を担当し、
+`telegram_bot.py` は Tomoさんが Telegram で `/today` や `/search` を使うための入口です。
 
 ## 1. サーバー準備
 
@@ -44,7 +52,7 @@ cp .env.example .env
 - `GMAIL_CLIENT_SECRET`
 - `GMAIL_REFRESH_TOKEN`
 
-Telegram 通知を使う場合だけ以下も設定します。
+Telegram を使う場合は以下も設定します。
 
 - `TELEGRAM_BOT_TOKEN`
 - `TELEGRAM_CHAT_ID`
@@ -59,48 +67,75 @@ Google Cloud Console で以下を有効化します。
 
 その後、OAuth クライアントを作り、refresh token を取得して `.env` に入れます。
 
-## 6. 一発実行
+## 6. Telegram Bot を作る
+
+1. Telegram アプリを開く
+2. `@BotFather` を検索
+3. `/newbot` で Bot を作成
+4. 発行された token を `.env` の `TELEGRAM_BOT_TOKEN` に入れる
+5. 作成した bot に自分で 1 通メッセージを送る
+6. `https://api.telegram.org/bot<token>/getUpdates` を開き、`chat.id` を確認する
+7. その値を `.env` の `TELEGRAM_CHAT_ID` に入れる
+
+## 7. RSS source を確認する
+
+RSS の取得先は `config/rss_sources.json` で管理します。
+
+最初はこのままで動きます。
+後で増やしたい場合は、同じ形式で source を追加してください。
+
+## 8. 初回動作確認
 
 ```bash
 cd /opt/agents-OpenClaw
 source .venv/bin/activate
-python scripts/run_all.py
-```
-
-実行対象:
-
-- 公開情報同期
-- 公開情報リンク生成
-- 公開向け案件一覧出力
-- カレンダー同期
-- Gmail 同期
-- 経費追記
-- タスクリマインド
-
-どれか1つ失敗した時点で止めたい場合だけ:
-
-```bash
 python scripts/run_all.py --fail-fast
 ```
 
-## 7. 手動確認
+これで次がまとめて動きます。
+
+- `scripts/public_info_sync.py`
+- `scripts/public_info_linker.py`
+- `scripts/public_case_export.py`
+- `scripts/calendar_sync.py`
+- `scripts/email_manager.py`
+- `scripts/expense_append.py`
+- `scripts/task_reminder.py`
+- `scripts/citizen_digest.py`
+- `scripts/morning_brief.py`
+
+## 9. Telegram bot の確認
+
+別ターミナルで起動します。
 
 ```bash
-python scripts/public_info_sync.py
-python scripts/case_ingest.py --title "通学路安全" --summary "横断歩道付近の見通しが悪い" --location "鹿折地区"
-python scripts/case_search.py --query "通学路 横断歩道" --location "鹿折地区"
+cd /opt/agents-OpenClaw
+source .venv/bin/activate
+python scripts/telegram_bot.py --loop
 ```
 
-主な出力先:
+その後 Telegram で次を試します。
 
-- `data/public/kesennuma/latest.json`
-- `data/cases/*.json`
-- `data/calendar/today.md`
-- `data/gmail/YYYY-MM-DD.md`
-- `data/tasks/today.md`
-- `reports/briefs/`
+- `/tutorial`
+- `/help`
+- `/today`
+- `/profile`
 
-## 8. cron で定期実行
+案件が入っている場合は次も使えます。
+
+- `/search 通学路`
+- `/public 子育て`
+- `/rss 福祉`
+- `/draft 子育て`
+
+自然文でもある程度使えます。
+
+- `今日は何がある？`
+- `通学路の相談ある？`
+- `子育て案件を上に出して`
+- `子育ての記事の下書きを作って`
+
+## 10. cron で定期実行
 
 ```bash
 crontab -e
@@ -112,8 +147,70 @@ crontab -e
 15 * * * * cd /opt/agents-OpenClaw && . .venv/bin/activate && python scripts/run_all.py >> /var/log/openclaw-run-all.log 2>&1
 ```
 
-## 9. 運用メモ
+## 11. Telegram bot の常駐
+
+最低限の簡易運用なら `tmux` や `screen` で十分です。
+本番では `systemd` 化するのがおすすめです。
+
+簡易起動例:
+
+```bash
+cd /opt/agents-OpenClaw
+source .venv/bin/activate
+python scripts/telegram_bot.py --loop
+```
+
+このプロセスが止まると、Telegram コマンドは受けられません。
+
+## 12. 主な出力先
+
+- `data/public/kesennuma/latest.json`
+- `data/cases/*.json`
+- `data/cases_public/latest.json`
+- `data/calendar/today.md`
+- `data/calendar/today.json`
+- `data/gmail/YYYY-MM-DD.md`
+- `data/tasks/today.md`
+- `reports/briefs/`
+- `reports/daily-briefing/`
+- `reports/activity-drafts/`
+- `data/telegram/tomo_profile.json`
+
+## 13. Tomoさんの使い方
+
+Tomoさん本人は、基本的にサーバーに入る必要はありません。
+
+使い方は次のイメージです。
+
+### 朝
+
+- Telegram に届く `おはようブリーフ` を見る
+
+### 面会や会議の前
+
+- Telegram に届く `3分ブリーフ` を見る
+
+### 必要なとき
+
+- `/today` で今日の要点を見る
+- `/search 通学路` で類似相談を見る
+- `/case case_xxx` で案件を見る
+- `/done case_xxx` で一次対応済みにする
+- `/feedback 子育て案件を上に出してほしい` で秘書の出し方を育てる
+- `/draft 子育て` で Note / Instagram の叩き台を作る
+
+つまり、Tomoさんの操作は `Telegram 中心` です。
+技術的な保守は別の人が担当する前提の方が運用しやすいです。
+
+## 14. つまずきやすい点
+
+- `.env` の認証情報不足
+- Telegram bot は作っただけでは使えず、自分から 1 回メッセージを送る必要がある
+- `telegram_bot.py --loop` を常駐させないと Telegram コマンドは反応しない
+- 市民向けフロントから案件が流れてこないと `citizen_digest.py` は空になる
+
+## 15. 補足
 
 - `.env` は GitHub に push しない
 - `data/` と `reports/` はこのリポジトリ配下に生成される
-- Lightsail 運用では `python scripts/run_all.py` を cron に載せるのが最もシンプルです
+- Lightsail 運用では `run_all.py + telegram_bot.py` の 2 本を動かすのが基本です

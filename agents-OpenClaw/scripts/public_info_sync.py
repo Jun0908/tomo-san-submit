@@ -10,10 +10,10 @@ import json
 import xml.etree.ElementTree as ET
 from urllib.request import urlopen
 
-from openclaw_core import build_public_record, write_public_snapshot
+from openclaw_core import PROJECT_ROOT, build_public_record, read_json_if_exists, write_public_snapshot
 
 
-PUBLIC_SOURCES = [
+DEFAULT_PUBLIC_SOURCES = [
     {
         "name": "市議会 新着情報",
         "url": "https://www.kesennuma.miyagi.jp/li/shisei/160/news.rss",
@@ -23,12 +23,31 @@ PUBLIC_SOURCES = [
         "url": "https://www.kesennuma.miyagi.jp/li/shisei/160/notice.rss",
     },
 ]
+RSS_SOURCE_CONFIG_PATH = PROJECT_ROOT / "config" / "rss_sources.json"
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description="気仙沼市の公開情報を同期する")
     parser.add_argument("--json", action="store_true", help="JSON で標準出力する")
     return parser.parse_args()
+
+
+def load_sources() -> list[dict]:
+    """設定ファイルがあれば RSS source を読み、なければ既定値を返す。"""
+    payload = read_json_if_exists(RSS_SOURCE_CONFIG_PATH, default=None)
+    if isinstance(payload, list) and payload:
+        sources = []
+        for item in payload:
+            if not isinstance(item, dict):
+                continue
+            name = item.get("name", "").strip()
+            url = item.get("url", "").strip()
+            if not name or not url:
+                continue
+            sources.append({"name": name, "url": url})
+        if sources:
+            return sources
+    return DEFAULT_PUBLIC_SOURCES
 
 
 def fetch_rss(source: dict) -> list[dict]:
@@ -68,8 +87,9 @@ def dedupe_records(records: list[dict]) -> list[dict]:
 def main():
     args = parse_args()
     all_records = []
+    sources = load_sources()
 
-    for source in PUBLIC_SOURCES:
+    for source in sources:
         all_records.extend(fetch_rss(source))
 
     records = dedupe_records(all_records)
@@ -78,7 +98,7 @@ def main():
 
     payload = {
         "count": len(records),
-        "sources": [source["name"] for source in PUBLIC_SOURCES],
+        "sources": [source["name"] for source in sources],
         "records": records[:10],
     }
 

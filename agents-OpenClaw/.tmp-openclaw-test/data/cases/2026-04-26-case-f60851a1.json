@@ -1,0 +1,143 @@
+{
+  "id": "case_607f68504ee1",
+  "title": "通学路安全",
+  "summary": "鹿折地区の横断歩道付近の見通しが悪く児童が危ないという相談",
+  "location": "鹿折地区",
+  "people": [],
+  "groups": [
+    "鹿折地区自治会"
+  ],
+  "tags": [
+    "教育",
+    "交通安全"
+  ],
+  "urgency": "high",
+  "status": "open",
+  "status_internal": "open",
+  "created_at": "2026-04-26T21:02:33.194969+09:00",
+  "updated_at": "2026-04-26T21:02:33.194969+09:00",
+  "open_questions": [
+    "事故件数は未確認"
+  ],
+  "next_actions": [
+    "本人判断を待つ",
+    "関連案件を確認する",
+    "現地確認の要否を整理する",
+    "事実確認前の発信を止める"
+  ],
+  "related_case_ids": [],
+  "related_public_info_ids": [],
+  "source_transcript": "",
+  "source": {
+    "type": "citizen_consultation",
+    "channel": "frontend",
+    "received_at": "2026-04-26T21:02:33.194969+09:00"
+  },
+  "issue": {
+    "tags": [
+      "教育",
+      "交通安全"
+    ],
+    "keywords": [
+      "鹿折地区",
+      "通学路安全",
+      "鹿折地区の横断歩道付近の見通しが悪く児童が危ないという相談",
+      "鹿折地区自治会"
+    ],
+    "policy_signal": "strong",
+    "facts_confirmed": [],
+    "facts_unconfirmed": [
+      "事故件数は未確認"
+    ],
+    "topic_cluster": [
+      "教育",
+      "交通安全"
+    ]
+  },
+  "triage": {
+    "route": "principal_decision",
+    "requires_principal_decision": true,
+    "reason": "高リスク案件のため、本人判断を優先する",
+    "decision_options": [
+      "秘書から一次返信する",
+      "担当課へ確認する",
+      "議会質問候補にする",
+      "現地確認を先に入れる"
+    ],
+    "deadline": "2026-04-27T18:00:00+09:00"
+  },
+  "region": "鹿折地区",
+  "keywords": [
+    "鹿折地区",
+    "通学路安全",
+    "鹿折地区の横断歩道付近の見通しが悪く児童が危ないという相談",
+    "鹿折地区自治会"
+  ],
+  "entities": {
+    "people": [],
+    "groups": [
+      "鹿折地区自治会"
+    ],
+    "region": "鹿折地区"
+  },
+  "risk": {
+    "level": "high",
+    "flags": [
+      "事実未確認"
+    ],
+    "notes": [
+      "未確認事項が残っているため、対外発信は慎重に扱う。"
+    ]
+  },
+  "follow_up": {
+    "owner": "principal",
+    "status": "needs_decision",
+    "due_at": "2026-04-27T18:00:00+09:00",
+    "decision_result": "",
+    "next_actions": [
+      "本人判断を待つ",
+      "関連案件を確認する",
+      "現地確認の要否を整理する",
+      "事実確認前の発信を止める"
+    ]
+  },
+  "links": {
+    "related_case_ids": [],
+    "related_public_info_ids": [],
+    "person_ids": [],
+    "group_ids": [
+      "group_45b9a031fe9f"
+    ],
+    "region_ids": [
+      "region_c0eef4593ccd"
+    ]
+  },
+  "route": "principal_decision",
+  "requires_principal_decision": true,
+  "decision_options": [
+    "秘書から一次返信する",
+    "担当課へ確認する",
+    "議会質問候補にする",
+    "現地確認を先に入れる"
+  ],
+  "deadline": "2026-04-27T18:00:00+09:00",
+  "risk_level": "high",
+  "risk_flags": [
+    "事実未確認"
+  ],
+  "owner": "principal",
+  "follow_up_status": "needs_decision",
+  "decision_result": "",
+  "due": "2026-04-27T18:00:00+09:00",
+  "policy_signal": "strong",
+  "status_public": "受付済み",
+  "latest_public_message": "ご相談を受け付けました。内容の整理を始めています。",
+  "requires_user_input": true,
+  "public_timeline": [
+    {
+      "status": "受付済み",
+      "message": "ご相談を受け付けました。内容の整理を始めています。",
+      "created_at": "2026-04-26T21:02:33.194969+09:00"
+    }
+  ]
+}

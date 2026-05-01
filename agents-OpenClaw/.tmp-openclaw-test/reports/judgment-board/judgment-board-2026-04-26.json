@@ -1,0 +1,169 @@
+{
+  "generated_at": "2026-04-26T21:04:59.233851+09:00",
+  "must_decide_today": [
+    {
+      "id": "case_607f68504ee1",
+      "title": "通学路安全",
+      "summary": "鹿折地区の横断歩道付近の見通しが悪く児童が危ないという相談",
+      "route": "principal_decision",
+      "route_label": "本人判断",
+      "reason": "今日中に判断したい案件",
+      "deadline": "2026-04-27T18:00:00+09:00",
+      "risk_level": "high",
+      "risk_flags": [
+        "事実未確認"
+      ],
+      "decision_options": [
+        "秘書から一次返信する",
+        "担当課へ確認する",
+        "議会質問候補にする",
+        "現地確認を先に入れる"
+      ],
+      "location": "鹿折地区",
+      "follow_up_status": "needs_decision"
+    }
+  ],
+  "risk_alerts": [
+    {
+      "id": "case_607f68504ee1",
+      "title": "通学路安全",
+      "summary": "鹿折地区の横断歩道付近の見通しが悪く児童が危ないという相談",
+      "route": "principal_decision",
+      "route_label": "本人判断",
+      "reason": "リスク確認が必要",
+      "deadline": "2026-04-27T18:00:00+09:00",
+      "risk_level": "high",
+      "risk_flags": [
+        "事実未確認"
+      ],
+      "decision_options": [
+        "秘書から一次返信する",
+        "担当課へ確認する",
+        "議会質問候補にする",
+        "現地確認を先に入れる"
+      ],
+      "location": "鹿折地区",
+      "follow_up_status": "needs_decision"
+    },
+    {
+      "id": "case_68dd3235b5fa",
+      "title": "自治会要望ヒアリング",
+      "summary": "鹿折地区自治会から道路安全と避難所運営について継続要望があった",
+      "route": "principal_decision",
+      "route_label": "本人判断",
+      "reason": "リスク確認が必要",
+      "deadline": "2026-04-28T18:00:00+09:00",
+      "risk_level": "medium",
+      "risk_flags": [
+        "事実未確認",
+        "公平性リスク"
+      ],
+      "decision_options": [
+        "秘書から一次返信する",
+        "担当課へ確認する",
+        "議会質問候補にする",
+        "現地確認を先に入れる"
+      ],
+      "location": "鹿折地区",
+      "follow_up_status": "pending"
+    }
+  ],
+  "meeting_related": [
+    {
+      "id": "case_607f68504ee1",
+      "title": "通学路安全",
+      "summary": "鹿折地区の横断歩道付近の見通しが悪く児童が危ないという相談",
+      "route": "principal_decision",
+      "route_label": "本人判断",
+      "reason": "予定に関係する案件",
+      "deadline": "2026-04-27T18:00:00+09:00",
+      "risk_level": "high",
+      "risk_flags": [
+        "事実未確認"
+      ],
+      "decision_options": [
+        "秘書から一次返信する",
+        "担当課へ確認する",
+        "議会質問候補にする",
+        "現地確認を先に入れる"
+      ],
+      "location": "鹿折地区",
+      "follow_up_status": "needs_decision"
+    },
+    {
+      "id": "case_68dd3235b5fa",
+      "title": "自治会要望ヒアリング",
+      "summary": "鹿折地区自治会から道路安全と避難所運営について継続要望があった",
+      "route": "principal_decision",
+      "route_label": "本人判断",
+      "reason": "予定に関係する案件",
+      "deadline": "2026-04-28T18:00:00+09:00",
+      "risk_level": "medium",
+      "risk_flags": [
+        "事実未確認",
+        "公平性リスク"
+      ],
+      "decision_options": [
+        "秘書から一次返信する",
+        "担当課へ確認する",
+        "議会質問候補にする",
+        "現地確認を先に入れる"
+      ],
+      "location": "鹿折地区",
+      "follow_up_status": "pending"
+    }
+  ],
+  "overdue_followups": [],
+  "principal_queue": [
+    {
+      "id": "case_607f68504ee1",
+      "title": "通学路安全",
+      "summary": "鹿折地区の横断歩道付近の見通しが悪く児童が危ないという相談",
+      "route": "principal_decision",
+      "route_label": "本人判断",
+      "reason": "高リスク案件のため、本人判断を優先する",
+      "deadline": "2026-04-27T18:00:00+09:00",
+      "risk_level": "high",
+      "risk_flags": [
+        "事実未確認"
+      ],
+      "decision_options": [
+        "秘書から一次返信する",
+        "担当課へ確認する",
+        "議会質問候補にする",
+        "現地確認を先に入れる"
+      ],
+      "location": "鹿折地区",
+      "follow_up_status": "needs_decision"
+    },
+    {
+      "id": "case_68dd3235b5fa",
+      "title": "自治会要望ヒアリング",
+      "summary": "鹿折地区自治会から道路安全と避難所運営について継続要望があった",
+      "route": "principal_decision",
+      "route_label": "本人判断",
+      "reason": "議会論点や政策テーマにつながる可能性が高い",
+      "deadline": "2026-04-28T18:00:00+09:00",
+      "risk_level": "medium",
+      "risk_flags": [
+        "事実未確認",
+        "公平性リスク"
+      ],
+      "decision_options": [
+        "秘書から一次返信する",
+        "担当課へ確認する",
+        "議会質問候補にする",
+        "現地確認を先に入れる"
+      ],
+      "location": "鹿折地区",
+      "follow_up_status": "pending"
+    }
+  ],
+  "summary": {
+    "principal_decision_count": 2,
+    "due_today_count": 1,
+    "risk_count": 2,
+    "meeting_related_count": 2,
+    "overdue_followups_count": 0
+  }
+}

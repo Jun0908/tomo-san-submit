@@ -1,0 +1,17 @@
+﻿{
+    "id":  "evt-1",
+    "description":  "道路安全と避難所運営の確認",
+    "attendees":  [
+                      {
+                          "email":  "jichikai@example.com"
+                      }
+                  ],
+    "start":  {
+                  "dateTime":  "2026-04-26T15:00:00+09:00"
+              },
+    "summary":  "鹿折地区自治会との面談",
+    "end":  {
+                "dateTime":  "2026-04-26T15:30:00+09:00"
+            },
+    "location":  "鹿折地区"
+}

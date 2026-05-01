@@ -1,0 +1,149 @@
+{
+  "id": "case_68dd3235b5fa",
+  "title": "自治会要望ヒアリング",
+  "summary": "鹿折地区自治会から道路安全と避難所運営について継続要望があった",
+  "location": "鹿折地区",
+  "people": [],
+  "groups": [
+    "鹿折地区自治会"
+  ],
+  "tags": [
+    "交通安全",
+    "防災"
+  ],
+  "urgency": "medium",
+  "status": "open",
+  "status_internal": "open",
+  "created_at": "2026-04-26T21:02:33.843876+09:00",
+  "updated_at": "2026-04-26T21:02:37.019251+09:00",
+  "open_questions": [
+    "担当課の現状確認が必要"
+  ],
+  "next_actions": [
+    "本人判断を待つ",
+    "関連案件を確認する",
+    "現地確認の要否を整理する",
+    "事実確認前の発信を止める"
+  ],
+  "related_case_ids": [
+    "case_607f68504ee1"
+  ],
+  "related_public_info_ids": [],
+  "source_transcript": "",
+  "source": {
+    "type": "meeting_note",
+    "channel": "voice_memo",
+    "received_at": "2026-04-26T21:02:33.843876+09:00"
+  },
+  "issue": {
+    "tags": [
+      "交通安全",
+      "防災"
+    ],
+    "keywords": [
+      "鹿折地区",
+      "自治会要望ヒアリング",
+      "鹿折地区自治会から道路安全と避難所運営について継続要望があった",
+      "鹿折地区自治会"
+    ],
+    "policy_signal": "strong",
+    "facts_confirmed": [],
+    "facts_unconfirmed": [
+      "担当課の現状確認が必要"
+    ],
+    "topic_cluster": [
+      "交通安全",
+      "防災"
+    ]
+  },
+  "triage": {
+    "route": "principal_decision",
+    "requires_principal_decision": true,
+    "reason": "議会論点や政策テーマにつながる可能性が高い",
+    "decision_options": [
+      "秘書から一次返信する",
+      "担当課へ確認する",
+      "議会質問候補にする",
+      "現地確認を先に入れる"
+    ],
+    "deadline": "2026-04-28T18:00:00+09:00"
+  },
+  "region": "鹿折地区",
+  "keywords": [
+    "鹿折地区",
+    "自治会要望ヒアリング",
+    "鹿折地区自治会から道路安全と避難所運営について継続要望があった",
+    "鹿折地区自治会"
+  ],
+  "entities": {
+    "people": [],
+    "groups": [
+      "鹿折地区自治会"
+    ],
+    "region": "鹿折地区"
+  },
+  "risk": {
+    "level": "medium",
+    "flags": [
+      "事実未確認",
+      "公平性リスク"
+    ],
+    "notes": [
+      "未確認事項が残っているため、対外発信は慎重に扱う。"
+    ]
+  },
+  "follow_up": {
+    "owner": "secretary",
+    "status": "pending",
+    "due_at": "2026-04-28T18:00:00+09:00",
+    "decision_result": "担当課へ確認する",
+    "next_actions": [
+      "本人判断を待つ",
+      "関連案件を確認する",
+      "現地確認の要否を整理する",
+      "事実確認前の発信を止める"
+    ]
+  },
+  "links": {
+    "related_case_ids": [
+      "case_607f68504ee1"
+    ],
+    "related_public_info_ids": [],
+    "person_ids": [],
+    "group_ids": [
+      "group_45b9a031fe9f"
+    ],
+    "region_ids": [
+      "region_c0eef4593ccd"
+    ]
+  },
+  "route": "principal_decision",
+  "requires_principal_decision": true,
+  "decision_options": [
+    "秘書から一次返信する",
+    "担当課へ確認する",
+    "議会質問候補にする",
+    "現地確認を先に入れる"
+  ],
+  "deadline": "2026-04-28T18:00:00+09:00",
+  "risk_level": "medium",
+  "risk_flags": [
+    "事実未確認",
+    "公平性リスク"
+  ],
+  "owner": "secretary",
+  "follow_up_status": "pending",
+  "decision_result": "担当課へ確認する",
+  "due": "2026-04-28T18:00:00+09:00",
+  "policy_signal": "strong",
+  "status_public": "受付済み",
+  "latest_public_message": "ご相談を受け付けました。内容の整理を始めています。",
+  "requires_user_input": true,
+  "public_timeline": [
+    {
+      "status": "受付済み",
+      "message": "ご相談を受け付けました。内容の整理を始めています。",
+      "created_at": "2026-04-26T21:02:33.843876+09:00"
+    }
+  ]
+}

@@ -22,6 +22,9 @@ JOBS = [
     ("gmail-sync", ["scripts/email_manager.py"]),
     ("expense-append", ["scripts/expense_append.py"]),
     ("task-reminder", ["scripts/task_reminder.py"]),
+    ("citizen-digest", ["scripts/citizen_digest.py"]),
+    ("judgment-board", ["scripts/judgment_board.py"]),
+    ("morning-brief", ["scripts/morning_brief.py"]),
 ]
 
 

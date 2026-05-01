@@ -1,170 +1,141 @@
-# セットアップ手順書
+# OpenClaw セットアップ手順
 
-このファイルを上から順番にやればOKです。
-素人でも迷わないように、1ステップずつ書いています。
+このリポジトリの現行おすすめ構成は `AWS Lightsail + cron + Telegram` です。
+そのため、まずは [SETUP_LIGHTSAIL.md](./SETUP_LIGHTSAIL.md) を使う前提で考えるのがいちばん迷いません。
 
----
+このファイルは、
 
-## STEP 1: GitHub にリポジトリを作る
+- 何をセットアップするのか
+- Tomoさんが日常でどう使うのか
+- どこまでを最初に動かせばよいのか
 
-1. https://github.com を開く
-2. 右上の「+」→「New repository」をクリック
-3. 以下を入力:
-   - Repository name: `your-vault`（好きな名前でOK）
-   - **Private** を選ぶ（重要！メールなど個人情報が入るので）
-   - 「Create repository」をクリック
-4. 作成後に表示される URL をメモしておく
-   例: `https://github.com/あなたのユーザー名/your-vault`
+を短く把握するための入口です。
 
----
+## 先に結論
 
-## STEP 2: このフォルダを GitHub に push する
+OpenClaw は「市民向けチャットそのもの」ではなく、
+市民向けフロントの裏側で動く `政治家秘書レイヤー` です。
 
-ターミナル（Mac: Terminal.app）を開いて、以下を順番に実行:
+役割分担はこうです。
 
-```bash
-# このフォルダに移動（パスは自分の環境に合わせる）
-cd /path/to/your-vault
+- 市民: 既存フロントで相談する
+- OpenClaw: 相談を案件化し、過去案件・予定・公開情報・RSS とつなぐ
+- Telegram: Tomoさん向けの秘書連絡帳になる
+- Tomoさん: Telegram の要点を見て判断する
 
-# Git を初期化
-git init
+## Tomoさんの使い方イメージ
 
-# GitHub と接続（URL は自分のものに変える）
-git remote add origin https://github.com/あなたのユーザー名/your-vault.git
+Tomoさんが毎日ターミナルを触る想定ではありません。
+基本は Telegram だけで使える形を目指します。
 
-# 全ファイルを追加
-git add .
+### 朝
 
-# 最初のコミット
-git commit -m "Initial vault setup"
+- `おはようブリーフ` が Telegram に届く
+- 今日の予定
+- 重要メール
+- 期限が近いタスク
+- 新規案件
+- 未解決案件
+- 市民相談ダイジェスト
 
-# main ブランチにして push
-git branch -M main
-git push -u origin main
-```
+### 予定前
 
-→ GitHub を開いてファイルが表示されれば成功！
+- `3分ブリーフ` が届く
+- 今日会う相手に関連する相談
+- 公開情報や RSS の関連情報
+- 今回確認したいこと
 
----
+### 必要なときだけ
 
-## STEP 3: Google の認証情報を取得する
+Telegram で次のようなコマンドを使う。
 
-GitHub Actions が Gmail / Calendar / Tasks にアクセスするための「鍵」を作ります。
+- `/tutorial`
+- `/today`
+- `/search 通学路`
+- `/case case_xxx`
+- `/public 子育て`
+- `/rss 福祉`
+- `/draft 子育て`
+- `/done case_xxx`
+- `/hold case_xxx`
+- `/feedback 子育て案件を上に出してほしい`
+- `/profile`
 
-### 3-1. Google Cloud Console でプロジェクトを作る
+つまり、Tomoさんが覚えることは多くありません。
+理想は `朝に届くメモを見る + 必要なときだけ Telegram で一言送る` です。
 
-1. https://console.cloud.google.com を開く
-2. 上部の「プロジェクトを選択」→「新しいプロジェクト」
-3. プロジェクト名: `my-vault-sync`（なんでもOK）
+しかも、今は `/tutorial` で対話型の案内を始められます。
+コマンドを覚えなくても、
 
-### 3-2. API を有効にする
+- `今日は何がある？`
+- `通学路の相談ある？`
+- `子育て案件を上に出して`
+- `子育ての記事の下書きを作って`
 
-「APIとサービス」→「ライブラリ」で以下を検索して「有効にする」:
-- Gmail API
-- Google Calendar API
-- Google Tasks API
+のように自然に話せば、かなりの部分はそのまま使えます。
 
-### 3-3. OAuth 認証情報を作る
+## Tomoさんは使いこなせるか
 
-1. 「APIとサービス」→「認証情報」→「認証情報を作成」→「OAuth クライアント ID」
-2. アプリケーションの種類: 「デスクトップアプリ」
-3. 作成後、**クライアントID** と **クライアントシークレット** をメモ
+結論から言うと、`UI を Telegram 中心に寄せれば十分使いこなせる可能性が高い` です。
 
-### 3-4. リフレッシュトークンを取得する（少し手間がかかります）
+逆に難しくなるのは次のパターンです。
 
-以下のスクリプトをローカルで1回だけ実行してリフレッシュトークンを取得:
+- ターミナル操作が必要
+- 画面が多い
+- 設定項目が多い
+- 毎回「どう使うか」を思い出す必要がある
 
-```bash
-pip install google-auth-oauthlib
+そのため、運用の考え方はこうするのがおすすめです。
 
-python3 << 'EOF'
-from google_auth_oauthlib.flow import InstalledAppFlow
+- Tomoさんは Telegram だけ使う
+- 技術側が Lightsail と `.env` と bot 常駐を管理する
+- 市民向けフロントからは OpenClaw に自動連携する
 
-SCOPES = [
-    "https://www.googleapis.com/auth/gmail.readonly",
-    "https://www.googleapis.com/auth/calendar.readonly",
-    "https://www.googleapis.com/auth/tasks.readonly",
-]
+## 最初に動かすべき最小セット
 
-flow = InstalledAppFlow.from_client_secrets_file(
-    "client_secret.json",  # ← Google Cloud からダウンロードしたファイル
-    scopes=SCOPES,
-)
-creds = flow.run_local_server(port=0)
-print("REFRESH_TOKEN:", creds.refresh_token)
-EOF
-```
+最初から全部を完璧に入れなくても大丈夫です。
+まずは次の 4 つが動けば「秘書」として価値が出ます。
 
-→ ブラウザが開くので Google アカウントでログインして許可する
-→ 出力された `REFRESH_TOKEN` をメモ
+1. `python scripts/run_all.py`
+2. `python scripts/citizen_digest.py`
+3. `python scripts/morning_brief.py`
+4. `python scripts/telegram_bot.py --loop`
 
----
+これで、
 
-## STEP 4: GitHub Secrets を登録する
+- 情報収集
+- 市民相談の要約
+- 朝ブリーフ
+- Telegram コマンド
 
-取得した認証情報を GitHub に安全に保存します。
+まで回せます。
 
-1. GitHub の自分のリポジトリを開く
-2. 「Settings」→「Secrets and variables」→「Actions」
-3. 「New repository secret」で以下を1つずつ登録:
+## セットアップの本体
 
-| Secret 名 | 値 |
-|-----------|-----|
-| `GOOGLE_CLIENT_ID` | 3-3 で取得したクライアントID |
-| `GOOGLE_CLIENT_SECRET` | 3-3 で取得したクライアントシークレット |
-| `GOOGLE_REFRESH_TOKEN` | 3-4 で取得したリフレッシュトークン |
-| `GMAIL_CLIENT_ID` | 同上（Gmail 用）|
-| `GMAIL_CLIENT_SECRET` | 同上（Gmail 用）|
-| `GMAIL_REFRESH_TOKEN` | 同上（Gmail 用）|
-| `TELEGRAM_BOT_TOKEN` | Telegram Bot の Token（次のステップ）|
-| `TELEGRAM_CHAT_ID` | 自分の Telegram Chat ID（次のステップ）|
+実際のサーバーセットアップは [SETUP_LIGHTSAIL.md](./SETUP_LIGHTSAIL.md) を見てください。
 
----
+見る順番:
 
-## STEP 5: Telegram Bot を作る（タスクリマインダー通知用）
+1. Lightsail の準備
+2. `.env` 設定
+3. Google API 認証
+4. Telegram Bot 作成
+5. `run_all.py` の動作確認
+6. `telegram_bot.py --loop` の動作確認
 
-1. Telegram アプリを開く
-2. `@BotFather` を検索してメッセージを送る
-3. `/newbot` と入力 → 名前をつける
-4. 表示された **Bot Token** をメモ（例: `123456:ABCdef...`）
-5. 作った Bot に自分でメッセージを送る
-6. `https://api.telegram.org/bot<トークン>/getUpdates` をブラウザで開く
-7. `"chat":{"id":12345678}` の数字が **Chat ID**
+## RSS について
 
----
+公開情報の取得元は `config/rss_sources.json` で増やせます。
 
-## STEP 6: GitHub Actions を手動で動かしてみる
+最初は気仙沼市議会系だけで十分ですが、今後は次のような source を足せます。
 
-1. GitHub のリポジトリ → 「Actions」タブを開く
-2. 左側に「Gmail Sync」「Calendar Sync」などが表示される
-3. 「Gmail Sync」をクリック → 「Run workflow」→「Run workflow」
-4. 緑のチェックマークが出れば成功！
-5. `data/gmail/` フォルダに今日の日付の .md ファイルが作られる
+- 市役所のお知らせ
+- 地域団体の新着情報
+- 子育てや福祉の告知
+- 防災関連の更新情報
 
----
+## 補足
 
-## STEP 7: Obsidian で Vault を開く
-
-1. Obsidian をインストール: https://obsidian.md
-2. 「Open folder as vault」→ このフォルダ内の `obsidian/` フォルダを選ぶ
-3. `03_Projects/`、`10-私の周りの人/` などにノートを書き始める
-
----
-
-## 完成形のイメージ
-
-GitHub Actions が毎時動いて:
-- Gmail → `data/gmail/2026-04-01.md` に保存
-- Calendar → `data/calendar/today.md` に保存（2時間以内のMTGは準備レポートも生成）
-- Tasks → `data/tasks/today.md` に保存（期限切れは Telegram に通知）
-- 経費 → `data/expenses/2026-04.md` に追記
-
-この repo をローカルに持っておけば、AI（OpenClaw / Claude）が全部読めます。
-
----
-
-## 困ったときは
-
-- GitHub Actions が赤くなる → Actions タブで「失敗したワークフロー」をクリックしてエラーを確認
-- Secrets が正しく入っているか確認する
-- 不明なエラーはエラーメッセージをそのままここに貼ってください
+- GitHub Actions ベースの古い運用も残せますが、現行の主ルートではありません
+- 現在の主ルートは `Lightsail で常駐させる` 方式です
+- Tomoさん本人に技術操作を背負わせない設計にした方がうまく回ります

@@ -1,0 +1,26 @@
+{
+  "id": "followup_7b33b4be93a7",
+  "case_id": "case_607f68504ee1",
+  "case_title": "通学路安全",
+  "route": "principal_decision",
+  "route_label": "本人判断",
+  "owner": "principal",
+  "status": "needs_decision",
+  "due_at": "2026-04-27T18:00:00+09:00",
+  "risk_level": "high",
+  "requires_principal_decision": true,
+  "decision_options": [
+    "秘書から一次返信する",
+    "担当課へ確認する",
+    "議会質問候補にする",
+    "現地確認を先に入れる"
+  ],
+  "decision_result": "",
+  "next_actions": [
+    "本人判断を待つ",
+    "関連案件を確認する",
+    "現地確認の要否を整理する",
+    "事実確認前の発信を止める"
+  ],
+  "updated_at": "2026-04-26T21:02:33.194969+09:00"
+}

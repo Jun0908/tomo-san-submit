@@ -1,0 +1,26 @@
+{
+  "id": "followup_e2767b266a37",
+  "case_id": "case_68dd3235b5fa",
+  "case_title": "自治会要望ヒアリング",
+  "route": "principal_decision",
+  "route_label": "本人判断",
+  "owner": "secretary",
+  "status": "pending",
+  "due_at": "2026-04-28T18:00:00+09:00",
+  "risk_level": "medium",
+  "requires_principal_decision": true,
+  "decision_options": [
+    "秘書から一次返信する",
+    "担当課へ確認する",
+    "議会質問候補にする",
+    "現地確認を先に入れる"
+  ],
+  "decision_result": "担当課へ確認する",
+  "next_actions": [
+    "本人判断を待つ",
+    "関連案件を確認する",
+    "現地確認の要否を整理する",
+    "事実確認前の発信を止める"
+  ],
+  "updated_at": "2026-04-26T21:02:37.019251+09:00"
+}

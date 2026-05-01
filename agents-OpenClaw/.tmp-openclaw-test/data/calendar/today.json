@@ -1,0 +1,54 @@
+{
+  "generated_at": "2026-04-26T21:04:37.792535+09:00",
+  "events": [
+    {
+      "id": "evt-1",
+      "title": "鹿折地区自治会との面談",
+      "description": "道路安全と避難所運営の確認",
+      "location": "鹿折地区",
+      "attendees": [
+        "jichikai@example.com"
+      ],
+      "start_at": "2026-04-26T15:00:00+09:00",
+      "end_at": "2026-04-26T15:30:00+09:00",
+      "start_date": "2026-04-26",
+      "related_cases": [
+        {
+          "id": "case_68dd3235b5fa",
+          "title": "自治会要望ヒアリング",
+          "score": 22,
+          "summary": "鹿折地区自治会から道路安全と避難所運営について継続要望があった",
+          "location": "鹿折地区",
+          "tags": [
+            "交通安全",
+            "防災"
+          ],
+          "status_public": "受付済み",
+          "route": "principal_decision",
+          "risk_level": "medium",
+          "groups": [
+            "鹿折地区自治会"
+          ]
+        },
+        {
+          "id": "case_607f68504ee1",
+          "title": "通学路安全",
+          "score": 16,
+          "summary": "鹿折地区の横断歩道付近の見通しが悪く児童が危ないという相談",
+          "location": "鹿折地区",
+          "tags": [
+            "教育",
+            "交通安全"
+          ],
+          "status_public": "受付済み",
+          "route": "principal_decision",
+          "risk_level": "high",
+          "groups": [
+            "鹿折地区自治会"
+          ]
+        }
+      ],
+      "related_public_info": []
+    }
+  ]
+}

@@ -84,9 +84,13 @@ def fetch_events(service):
 
 def load_events_from_file(path: Path):
     """ローカル JSON から予定一覧を読む。"""
-    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload = json.loads(path.read_text(encoding="utf-8-sig"))
     if isinstance(payload, dict):
-        return payload.get("items", [])
+        if isinstance(payload.get("items"), list):
+            return payload.get("items", [])
+        if payload.get("start") and payload.get("end"):
+            return [payload]
+        return []
     return payload
 
 
@@ -202,6 +206,10 @@ def write_legacy_meeting_prep(brief: dict):
     lines.extend([f"- {item['title']}" for item in brief["related_cases"]] or ["- 該当なし"])
     lines.extend(["", "## 今回確認したいこと"])
     lines.extend([f"- {item}" for item in brief["questions_to_ask"]] or ["- 特になし"])
+    lines.extend(["", "## この場で決めたいこと"])
+    lines.extend([f"- {item}" for item in brief.get("decision_focus", [])] or ["- 特になし"])
+    lines.extend(["", "## 慎重にしたいこと"])
+    lines.extend([f"- {item}" for item in brief.get("caution_points", [])] or ["- 特になし"])
     lines.extend(["", "## 関連する公開情報"])
     lines.extend([f"- {item['title']}" for item in brief["related_public_info"]] or ["- 該当なし"])
     output_path.write_text("\n".join(lines).strip() + "\n", encoding="utf-8")

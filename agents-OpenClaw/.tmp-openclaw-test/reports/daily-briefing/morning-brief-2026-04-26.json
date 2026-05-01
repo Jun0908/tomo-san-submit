@@ -1,0 +1,522 @@
+{
+  "generated_at": "2026-04-26T21:04:59.233851+09:00",
+  "today": "2026-04-26",
+  "judgment_board": {
+    "generated_at": "2026-04-26T21:04:59.233851+09:00",
+    "must_decide_today": [
+      {
+        "id": "case_607f68504ee1",
+        "title": "通学路安全",
+        "summary": "鹿折地区の横断歩道付近の見通しが悪く児童が危ないという相談",
+        "route": "principal_decision",
+        "route_label": "本人判断",
+        "reason": "今日中に判断したい案件",
+        "deadline": "2026-04-27T18:00:00+09:00",
+        "risk_level": "high",
+        "risk_flags": [
+          "事実未確認"
+        ],
+        "decision_options": [
+          "秘書から一次返信する",
+          "担当課へ確認する",
+          "議会質問候補にする",
+          "現地確認を先に入れる"
+        ],
+        "location": "鹿折地区",
+        "follow_up_status": "needs_decision"
+      }
+    ],
+    "risk_alerts": [
+      {
+        "id": "case_607f68504ee1",
+        "title": "通学路安全",
+        "summary": "鹿折地区の横断歩道付近の見通しが悪く児童が危ないという相談",
+        "route": "principal_decision",
+        "route_label": "本人判断",
+        "reason": "リスク確認が必要",
+        "deadline": "2026-04-27T18:00:00+09:00",
+        "risk_level": "high",
+        "risk_flags": [
+          "事実未確認"
+        ],
+        "decision_options": [
+          "秘書から一次返信する",
+          "担当課へ確認する",
+          "議会質問候補にする",
+          "現地確認を先に入れる"
+        ],
+        "location": "鹿折地区",
+        "follow_up_status": "needs_decision"
+      },
+      {
+        "id": "case_68dd3235b5fa",
+        "title": "自治会要望ヒアリング",
+        "summary": "鹿折地区自治会から道路安全と避難所運営について継続要望があった",
+        "route": "principal_decision",
+        "route_label": "本人判断",
+        "reason": "リスク確認が必要",
+        "deadline": "2026-04-28T18:00:00+09:00",
+        "risk_level": "medium",
+        "risk_flags": [
+          "事実未確認",
+          "公平性リスク"
+        ],
+        "decision_options": [
+          "秘書から一次返信する",
+          "担当課へ確認する",
+          "議会質問候補にする",
+          "現地確認を先に入れる"
+        ],
+        "location": "鹿折地区",
+        "follow_up_status": "pending"
+      }
+    ],
+    "meeting_related": [
+      {
+        "id": "case_607f68504ee1",
+        "title": "通学路安全",
+        "summary": "鹿折地区の横断歩道付近の見通しが悪く児童が危ないという相談",
+        "route": "principal_decision",
+        "route_label": "本人判断",
+        "reason": "予定に関係する案件",
+        "deadline": "2026-04-27T18:00:00+09:00",
+        "risk_level": "high",
+        "risk_flags": [
+          "事実未確認"
+        ],
+        "decision_options": [
+          "秘書から一次返信する",
+          "担当課へ確認する",
+          "議会質問候補にする",
+          "現地確認を先に入れる"
+        ],
+        "location": "鹿折地区",
+        "follow_up_status": "needs_decision"
+      },
+      {
+        "id": "case_68dd3235b5fa",
+        "title": "自治会要望ヒアリング",
+        "summary": "鹿折地区自治会から道路安全と避難所運営について継続要望があった",
+        "route": "principal_decision",
+        "route_label": "本人判断",
+        "reason": "予定に関係する案件",
+        "deadline": "2026-04-28T18:00:00+09:00",
+        "risk_level": "medium",
+        "risk_flags": [
+          "事実未確認",
+          "公平性リスク"
+        ],
+        "decision_options": [
+          "秘書から一次返信する",
+          "担当課へ確認する",
+          "議会質問候補にする",
+          "現地確認を先に入れる"
+        ],
+        "location": "鹿折地区",
+        "follow_up_status": "pending"
+      }
+    ],
+    "overdue_followups": [],
+    "principal_queue": [
+      {
+        "id": "case_607f68504ee1",
+        "title": "通学路安全",
+        "summary": "鹿折地区の横断歩道付近の見通しが悪く児童が危ないという相談",
+        "route": "principal_decision",
+        "route_label": "本人判断",
+        "reason": "高リスク案件のため、本人判断を優先する",
+        "deadline": "2026-04-27T18:00:00+09:00",
+        "risk_level": "high",
+        "risk_flags": [
+          "事実未確認"
+        ],
+        "decision_options": [
+          "秘書から一次返信する",
+          "担当課へ確認する",
+          "議会質問候補にする",
+          "現地確認を先に入れる"
+        ],
+        "location": "鹿折地区",
+        "follow_up_status": "needs_decision"
+      },
+      {
+        "id": "case_68dd3235b5fa",
+        "title": "自治会要望ヒアリング",
+        "summary": "鹿折地区自治会から道路安全と避難所運営について継続要望があった",
+        "route": "principal_decision",
+        "route_label": "本人判断",
+        "reason": "議会論点や政策テーマにつながる可能性が高い",
+        "deadline": "2026-04-28T18:00:00+09:00",
+        "risk_level": "medium",
+        "risk_flags": [
+          "事実未確認",
+          "公平性リスク"
+        ],
+        "decision_options": [
+          "秘書から一次返信する",
+          "担当課へ確認する",
+          "議会質問候補にする",
+          "現地確認を先に入れる"
+        ],
+        "location": "鹿折地区",
+        "follow_up_status": "pending"
+      }
+    ],
+    "summary": {
+      "principal_decision_count": 2,
+      "due_today_count": 1,
+      "risk_count": 2,
+      "meeting_related_count": 2,
+      "overdue_followups_count": 0
+    }
+  },
+  "followup_queue": {
+    "generated_at": "2026-04-26T21:04:59.233851+09:00",
+    "summary": {
+      "active_count": 2,
+      "urgent_count": 1,
+      "overdue_count": 0
+    },
+    "active": [
+      {
+        "id": "followup_7b33b4be93a7",
+        "case_id": "case_607f68504ee1",
+        "case_title": "通学路安全",
+        "route": "principal_decision",
+        "route_label": "本人判断",
+        "owner": "principal",
+        "status": "needs_decision",
+        "due_at": "2026-04-27T18:00:00+09:00",
+        "risk_level": "high",
+        "requires_principal_decision": true,
+        "decision_options": [
+          "秘書から一次返信する",
+          "担当課へ確認する",
+          "議会質問候補にする",
+          "現地確認を先に入れる"
+        ],
+        "decision_result": "",
+        "next_actions": [
+          "本人判断を待つ",
+          "関連案件を確認する",
+          "現地確認の要否を整理する",
+          "事実確認前の発信を止める"
+        ],
+        "updated_at": "2026-04-26T21:02:33.194969+09:00"
+      },
+      {
+        "id": "followup_e2767b266a37",
+        "case_id": "case_68dd3235b5fa",
+        "case_title": "自治会要望ヒアリング",
+        "route": "principal_decision",
+        "route_label": "本人判断",
+        "owner": "secretary",
+        "status": "pending",
+        "due_at": "2026-04-28T18:00:00+09:00",
+        "risk_level": "medium",
+        "requires_principal_decision": true,
+        "decision_options": [
+          "秘書から一次返信する",
+          "担当課へ確認する",
+          "議会質問候補にする",
+          "現地確認を先に入れる"
+        ],
+        "decision_result": "担当課へ確認する",
+        "next_actions": [
+          "本人判断を待つ",
+          "関連案件を確認する",
+          "現地確認の要否を整理する",
+          "事実確認前の発信を止める"
+        ],
+        "updated_at": "2026-04-26T21:02:37.019251+09:00"
+      }
+    ],
+    "urgent": [
+      {
+        "id": "followup_7b33b4be93a7",
+        "case_id": "case_607f68504ee1",
+        "case_title": "通学路安全",
+        "route": "principal_decision",
+        "route_label": "本人判断",
+        "owner": "principal",
+        "status": "needs_decision",
+        "due_at": "2026-04-27T18:00:00+09:00",
+        "risk_level": "high",
+        "requires_principal_decision": true,
+        "decision_options": [
+          "秘書から一次返信する",
+          "担当課へ確認する",
+          "議会質問候補にする",
+          "現地確認を先に入れる"
+        ],
+        "decision_result": "",
+        "next_actions": [
+          "本人判断を待つ",
+          "関連案件を確認する",
+          "現地確認の要否を整理する",
+          "事実確認前の発信を止める"
+        ],
+        "updated_at": "2026-04-26T21:02:33.194969+09:00"
+      }
+    ],
+    "overdue": []
+  },
+  "events": [
+    {
+      "id": "evt-1",
+      "title": "鹿折地区自治会との面談",
+      "description": "道路安全と避難所運営の確認",
+      "location": "鹿折地区",
+      "attendees": [
+        "jichikai@example.com"
+      ],
+      "start_at": "2026-04-26T15:00:00+09:00",
+      "end_at": "2026-04-26T15:30:00+09:00",
+      "start_date": "2026-04-26",
+      "related_cases": [
+        {
+          "id": "case_68dd3235b5fa",
+          "title": "自治会要望ヒアリング",
+          "score": 22,
+          "summary": "鹿折地区自治会から道路安全と避難所運営について継続要望があった",
+          "location": "鹿折地区",
+          "tags": [
+            "交通安全",
+            "防災"
+          ],
+          "status_public": "受付済み",
+          "route": "principal_decision",
+          "risk_level": "medium",
+          "groups": [
+            "鹿折地区自治会"
+          ]
+        },
+        {
+          "id": "case_607f68504ee1",
+          "title": "通学路安全",
+          "score": 16,
+          "summary": "鹿折地区の横断歩道付近の見通しが悪く児童が危ないという相談",
+          "location": "鹿折地区",
+          "tags": [
+            "教育",
+            "交通安全"
+          ],
+          "status_public": "受付済み",
+          "route": "principal_decision",
+          "risk_level": "high",
+          "groups": [
+            "鹿折地区自治会"
+          ]
+        }
+      ],
+      "related_public_info": []
+    }
+  ],
+  "important_emails": [
+    {
+      "subject": "自治会面談の日程調整",
+      "priority": "P1"
+    }
+  ],
+  "tasks": [
+    "鹿折地区の現地確認日程調整"
+  ],
+  "new_cases": [
+    {
+      "id": "case_68dd3235b5fa",
+      "title": "自治会要望ヒアリング",
+      "summary": "鹿折地区自治会から道路安全と避難所運営について継続要望があった",
+      "urgency": "medium",
+      "route": "principal_decision"
+    },
+    {
+      "id": "case_607f68504ee1",
+      "title": "通学路安全",
+      "summary": "鹿折地区の横断歩道付近の見通しが悪く児童が危ないという相談",
+      "urgency": "high",
+      "route": "principal_decision"
+    }
+  ],
+  "unresolved_cases": [
+    {
+      "id": "case_607f68504ee1",
+      "title": "通学路安全",
+      "status_public": "受付済み",
+      "urgency": "high",
+      "route": "principal_decision"
+    },
+    {
+      "id": "case_68dd3235b5fa",
+      "title": "自治会要望ヒアリング",
+      "status_public": "受付済み",
+      "urgency": "medium",
+      "route": "principal_decision"
+    }
+  ],
+  "agenda_cases": [
+    {
+      "id": "case_68dd3235b5fa",
+      "title": "自治会要望ヒアリング",
+      "score": 22,
+      "summary": "鹿折地区自治会から道路安全と避難所運営について継続要望があった",
+      "location": "鹿折地区",
+      "tags": [
+        "交通安全",
+        "防災"
+      ],
+      "status_public": "受付済み",
+      "route": "principal_decision",
+      "risk_level": "medium",
+      "groups": [
+        "鹿折地区自治会"
+      ]
+    },
+    {
+      "id": "case_607f68504ee1",
+      "title": "通学路安全",
+      "score": 16,
+      "summary": "鹿折地区の横断歩道付近の見通しが悪く児童が危ないという相談",
+      "location": "鹿折地区",
+      "tags": [
+        "教育",
+        "交通安全"
+      ],
+      "status_public": "受付済み",
+      "route": "principal_decision",
+      "risk_level": "high",
+      "groups": [
+        "鹿折地区自治会"
+      ]
+    }
+  ],
+  "daily_digest": {
+    "period": "daily",
+    "generated_at": "2026-04-26T21:04:59.233851+09:00",
+    "range_start": "2026-04-26T00:00:00+09:00",
+    "range_end": "2026-04-26T21:05:00.233851+09:00",
+    "new_case_count": 2,
+    "unresolved_case_count": 2,
+    "public_linked_case_count": 0,
+    "follow_up_count": 2,
+    "policy_candidate_count": 2,
+    "top_topics": [
+      {
+        "name": "交通安全",
+        "count": 2
+      },
+      {
+        "name": "防災",
+        "count": 1
+      },
+      {
+        "name": "教育",
+        "count": 1
+      }
+    ],
+    "top_locations": [
+      {
+        "name": "鹿折地区",
+        "count": 2
+      }
+    ],
+    "urgency_breakdown": {
+      "high": 1,
+      "medium": 1,
+      "low": 0
+    },
+    "follow_up_cases": [
+      {
+        "id": "case_68dd3235b5fa",
+        "title": "自治会要望ヒアリング",
+        "summary": "鹿折地区自治会から道路安全と避難所運営について継続要望があった",
+        "location": "鹿折地区",
+        "urgency": "medium",
+        "status_public": "受付済み",
+        "requires_user_input": true,
+        "related_public_count": 0,
+        "route": "principal_decision",
+        "policy_signal": "strong"
+      },
+      {
+        "id": "case_607f68504ee1",
+        "title": "通学路安全",
+        "summary": "鹿折地区の横断歩道付近の見通しが悪く児童が危ないという相談",
+        "location": "鹿折地区",
+        "urgency": "high",
+        "status_public": "受付済み",
+        "requires_user_input": true,
+        "related_public_count": 0,
+        "route": "principal_decision",
+        "policy_signal": "strong"
+      }
+    ],
+    "priority_cases": [
+      {
+        "id": "case_607f68504ee1",
+        "title": "通学路安全",
+        "summary": "鹿折地区の横断歩道付近の見通しが悪く児童が危ないという相談",
+        "location": "鹿折地区",
+        "urgency": "high",
+        "status_public": "受付済み",
+        "requires_user_input": true,
+        "related_public_count": 0,
+        "route": "principal_decision",
+        "policy_signal": "strong"
+      },
+      {
+        "id": "case_68dd3235b5fa",
+        "title": "自治会要望ヒアリング",
+        "summary": "鹿折地区自治会から道路安全と避難所運営について継続要望があった",
+        "location": "鹿折地区",
+        "urgency": "medium",
+        "status_public": "受付済み",
+        "requires_user_input": true,
+        "related_public_count": 0,
+        "route": "principal_decision",
+        "policy_signal": "strong"
+      }
+    ],
+    "policy_candidates": [
+      {
+        "id": "case_68dd3235b5fa",
+        "title": "自治会要望ヒアリング",
+        "summary": "鹿折地区自治会から道路安全と避難所運営について継続要望があった",
+        "location": "鹿折地区",
+        "urgency": "medium",
+        "status_public": "受付済み",
+        "requires_user_input": true,
+        "related_public_count": 0,
+        "route": "principal_decision",
+        "policy_signal": "strong"
+      },
+      {
+        "id": "case_607f68504ee1",
+        "title": "通学路安全",
+        "summary": "鹿折地区の横断歩道付近の見通しが悪く児童が危ないという相談",
+        "location": "鹿折地区",
+        "urgency": "high",
+        "status_public": "受付済み",
+        "requires_user_input": true,
+        "related_public_count": 0,
+        "route": "principal_decision",
+        "policy_signal": "strong"
+      }
+    ],
+    "region_clusters": [
+      {
+        "name": "鹿折地区",
+        "count": 2
+      }
+    ],
+    "summary": "daily 新規案件 2件 / 未解決 2件 / 最多テーマ 交通安全 (2件) / 政策化候補 2件",
+    "profile_applied": {
+      "preferred_topics": [],
+      "preferred_regions": []
+    }
+  },
+  "profile_applied": {
+    "preferred_topics": [],
+    "preferred_regions": [],
+    "brief_style": "short"
+  }
+}
