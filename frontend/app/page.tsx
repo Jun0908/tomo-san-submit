@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import { createSession, listSessions } from '@/lib/session';
+import { verifyHumanWithWorld } from '@/lib/world';
 import type { Session } from '@/lib/types';
 
 export default function HomePage() {
@@ -36,7 +37,8 @@ export default function HomePage() {
     setError('');
 
     try {
-      const session = await createSession();
+      const world = await verifyHumanWithWorld();
+      const session = await createSession({ world });
       window.location.href = `/conversation/${session.id}`;
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : '新しい相談を開始できませんでした。');
@@ -54,7 +56,7 @@ export default function HomePage() {
         </p>
         <div className="heroActions">
           <button className="button" onClick={start} disabled={isCreating}>
-            {isCreating ? '相談を準備中...' : '新しい相談を始める'}
+            {isCreating ? '人間確認中...' : '人間確認して相談を始める'}
           </button>
           <Link className="textLink" href="/tomo">
             Tomoさんと話す

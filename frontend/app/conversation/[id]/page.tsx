@@ -134,6 +134,25 @@ export default function ConversationPage({ params }: Props) {
 
         {error ? <p className="errorText">{error}</p> : null}
 
+        <div className="verificationBadges">
+          {session.world?.verified ? (
+            <span className="badge badgeGreen">
+              ✅ 人間確認済み (World{session.world.demo ? ' デモ' : ''})
+            </span>
+          ) : (
+            <span className="badge badgeMuted">未確認</span>
+          )}
+          {session.openClawCaseId ? (
+            <span className="badge badgeBlue">🧠 OpenClaw: {session.openClawCaseId}</span>
+          ) : null}
+          {session.near?.caseReceiptTxHash ? (
+            <span className="badge badgePurple">
+              ⛓ NEAR: {session.near.caseReceiptTxHash.slice(0, 20)}...
+              {session.near.demo ? ' (デモ)' : ''}
+            </span>
+          ) : null}
+        </div>
+
         <div className="footerActions">
           <button className="button" onClick={generate} disabled={isGenerating}>
             {isGenerating ? '案件を生成中...' : '公開向け案件ページを作る'}

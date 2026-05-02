@@ -72,6 +72,23 @@ export default function CasePage({ params }: Props) {
         </div>
 
         <p className="mutedText">元の相談: {record.sessionTitle}</p>
+
+        <div className="verificationBadges">
+          {record.world?.verified ? (
+            <span className="badge badgeGreen">
+              ✅ 人間確認済み (World{record.world.demo ? ' デモ' : ''})
+            </span>
+          ) : (
+            <span className="badge badgeMuted">未確認</span>
+          )}
+          {record.near?.caseReceiptTxHash ? (
+            <span className="badge badgePurple">
+              ⛓ NEAR: {record.near.caseReceiptTxHash.slice(0, 20)}...
+              {record.near.demo ? ' (デモ)' : ''}
+            </span>
+          ) : null}
+        </div>
+
         <p className="publicMessage">{generated.latestPublicMessage}</p>
 
         <div className="metaGrid">

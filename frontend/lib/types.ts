@@ -35,6 +35,24 @@ export type IntakeDraftInput = {
   tags: string[];
 };
 
+export type WorldVerification = {
+  verified: boolean;
+  nullifierHash?: string;
+  credentialType?: string;
+  action?: string;
+  verifiedAt?: string;
+  demo?: boolean;
+};
+
+export type NearExecution = {
+  network: 'testnet' | 'mainnet' | 'local' | string;
+  caseReceiptTxHash?: string;
+  intentId?: string;
+  status?: 'pending' | 'submitted' | 'settled' | 'failed' | 'mocked';
+  submittedAt?: string;
+  demo?: boolean;
+};
+
 export type Session = {
   id: string;
   title: string;
@@ -44,10 +62,14 @@ export type Session = {
   generated?: PublicCase;
   openClawCaseId?: string;
   openClawPublicJsonPath?: string;
+  world?: WorldVerification;
+  near?: NearExecution;
 };
 
 export type ApiCaseRecord = {
   sessionId: string;
   sessionTitle: string;
   case: PublicCase;
+  world?: WorldVerification;
+  near?: NearExecution;
 };

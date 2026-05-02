@@ -3,7 +3,9 @@ import path from 'path';
 
 import { appendMessage, buildIntakeDraft, createInitialSession } from '@/lib/server/mock-intake';
 import { getOpenClawPublicCase, ingestOpenClawCaseDraft } from '@/lib/server/openclaw-bridge';
-import type { ApiCaseRecord, Session } from '@/lib/types';
+import { sha256Json } from '@/lib/server/hash';
+import { submitCaseReceiptToNear } from '@/lib/server/near';
+import type { ApiCaseRecord, Session, WorldVerification } from '@/lib/types';
 
 type StoreShape = {
   sessions: Session[];
@@ -42,12 +44,20 @@ export async function listStoredSessions(): Promise<Session[]> {
   return [...store.sessions].sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
 }
 
-export async function createStoredSession(): Promise<Session> {
+export async function createStoredSession(input?: {
+  world?: WorldVerification;
+}): Promise<Session> {
   const store = await readStore();
   const session = createInitialSession();
-  store.sessions.unshift(session);
+
+  const updated: Session = {
+    ...session,
+    world: input?.world,
+  };
+
+  store.sessions.unshift(updated);
   await writeStore(store);
-  return session;
+  return updated;
 }
 
 export async function getStoredSession(id: string): Promise<Session | null> {
@@ -84,12 +94,32 @@ export async function generateStoredCase(id: string): Promise<Session | null> {
   }
 
   const ingestResult = await ingestOpenClawCaseDraft(draft);
+
+  const nearReceipt = await submitCaseReceiptToNear({
+    sessionId: id,
+    openClawCaseId: ingestResult.openClawCaseId,
+    publicCaseId: ingestResult.publicCase.id,
+    title: ingestResult.publicCase.title,
+    summaryHash: sha256Json({
+      id: ingestResult.publicCase.id,
+      title: ingestResult.publicCase.title,
+      summary: ingestResult.publicCase.summary,
+      statusPublic: ingestResult.publicCase.statusPublic,
+      themeTags: ingestResult.publicCase.themeTags,
+      timeline: ingestResult.publicCase.timeline,
+    }),
+    worldVerified: Boolean(store.sessions[index].world?.verified),
+    createdAt: ingestResult.publicCase.createdAt,
+    updatedAt: ingestResult.publicCase.updatedAt,
+  });
+
   const updated: Session = {
     ...store.sessions[index],
     updatedAt: ingestResult.publicCase.updatedAt,
     generated: ingestResult.publicCase,
     openClawCaseId: ingestResult.openClawCaseId,
     openClawPublicJsonPath: ingestResult.publicJsonPath,
+    near: nearReceipt,
   };
   store.sessions[index] = updated;
   await writeStore(store);
@@ -121,6 +151,8 @@ export async function getStoredCaseRecord(id: string): Promise<ApiCaseRecord | n
         sessionId: session.id,
         sessionTitle: session.title,
         case: latest,
+        world: session.world,
+        near: session.near,
       };
     }
   }
@@ -133,5 +165,7 @@ export async function getStoredCaseRecord(id: string): Promise<ApiCaseRecord | n
     sessionId: session.id,
     sessionTitle: session.title,
     case: session.generated,
+    world: session.world,
+    near: session.near,
   };
 }

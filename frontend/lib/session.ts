@@ -1,6 +1,6 @@
 'use client';
 
-import type { ApiCaseRecord, Session } from '@/lib/types';
+import type { ApiCaseRecord, Session, WorldVerification } from '@/lib/types';
 
 async function request<T>(input: RequestInfo, init?: RequestInit): Promise<T> {
   const response = await fetch(input, {
@@ -32,8 +32,13 @@ export async function listSessions(): Promise<Session[]> {
   return request<Session[]>('/api/conversations');
 }
 
-export async function createSession(): Promise<Session> {
-  return request<Session>('/api/conversations', { method: 'POST' });
+export async function createSession(input?: {
+  world?: WorldVerification;
+}): Promise<Session> {
+  return request<Session>('/api/conversations', {
+    method: 'POST',
+    body: JSON.stringify(input ?? {}),
+  });
 }
 
 export async function getSession(id: string): Promise<Session> {
