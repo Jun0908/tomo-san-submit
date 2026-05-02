@@ -2,6 +2,8 @@
 
 **市民の声を覚え、予定と公開情報につなぎ、朝と予定前に準備を渡す政治家秘書。**
 
+> 🇺🇸 English version → [README.en.md](README.en.md)
+
 ---
 
 ## なぜ作ったか
