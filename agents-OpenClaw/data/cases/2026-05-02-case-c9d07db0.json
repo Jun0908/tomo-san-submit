@@ -1,0 +1,129 @@
+{
+  "id": "case_52696e2b273e",
+  "title": "通学路が危険です",
+  "summary": "通学路が危険です",
+  "location": "",
+  "people": [],
+  "groups": [],
+  "tags": [
+    "交通安全",
+    "教育"
+  ],
+  "urgency": "medium",
+  "status": "open",
+  "status_internal": "open",
+  "created_at": "2026-05-02T15:47:11.991204+09:00",
+  "updated_at": "2026-05-02T15:47:11.991204+09:00",
+  "open_questions": [],
+  "next_actions": [
+    "本人判断を待つ",
+    "関連案件を確認する",
+    "事実確認前の発信を止める"
+  ],
+  "related_case_ids": [
+    "case_82dac03f2c5f",
+    "case_5ea8fb1e7a0e"
+  ],
+  "related_public_info_ids": [],
+  "source_transcript": "騾壼ュヲ霍ッ縺悟些髯コ縺ァ縺?",
+  "source": {
+    "type": "citizen_consultation",
+    "channel": "frontend",
+    "received_at": "2026-05-02T15:47:11.991204+09:00"
+  },
+  "issue": {
+    "tags": [
+      "交通安全",
+      "教育"
+    ],
+    "keywords": [
+      "通学路が危険です",
+      "騾壼ュヲ霍ッ縺悟些髯コ縺ァ縺"
+    ],
+    "policy_signal": "strong",
+    "facts_confirmed": [],
+    "facts_unconfirmed": [],
+    "topic_cluster": [
+      "交通安全",
+      "教育"
+    ]
+  },
+  "triage": {
+    "route": "principal_decision",
+    "requires_principal_decision": true,
+    "reason": "議会論点や政策テーマにつながる可能性が高い",
+    "decision_options": [
+      "秘書から一次返信する",
+      "担当課へ確認する",
+      "議会質問候補にする"
+    ],
+    "deadline": "2026-05-04T18:00:00+09:00"
+  },
+  "region": "",
+  "keywords": [
+    "通学路が危険です",
+    "騾壼ュヲ霍ッ縺悟些髯コ縺ァ縺"
+  ],
+  "entities": {
+    "people": [],
+    "groups": [],
+    "region": ""
+  },
+  "risk": {
+    "level": "medium",
+    "flags": [
+      "事実未確認"
+    ],
+    "notes": [
+      "場所が未設定のため、担当課確認の前に追加ヒアリングが必要。"
+    ]
+  },
+  "follow_up": {
+    "owner": "principal",
+    "status": "needs_decision",
+    "due_at": "2026-05-04T18:00:00+09:00",
+    "decision_result": "",
+    "next_actions": [
+      "本人判断を待つ",
+      "関連案件を確認する",
+      "事実確認前の発信を止める"
+    ]
+  },
+  "links": {
+    "related_case_ids": [
+      "case_82dac03f2c5f",
+      "case_5ea8fb1e7a0e"
+    ],
+    "related_public_info_ids": [],
+    "person_ids": [],
+    "group_ids": [],
+    "region_ids": []
+  },
+  "route": "principal_decision",
+  "requires_principal_decision": true,
+  "decision_options": [
+    "秘書から一次返信する",
+    "担当課へ確認する",
+    "議会質問候補にする"
+  ],
+  "deadline": "2026-05-04T18:00:00+09:00",
+  "risk_level": "medium",
+  "risk_flags": [
+    "事実未確認"
+  ],
+  "owner": "principal",
+  "follow_up_status": "needs_decision",
+  "decision_result": "",
+  "due": "2026-05-04T18:00:00+09:00",
+  "policy_signal": "strong",
+  "status_public": "受付済み",
+  "latest_public_message": "ご相談を受け付けました。内容の整理を始めています。",
+  "requires_user_input": true,
+  "public_timeline": [
+    {
+      "status": "受付済み",
+      "message": "ご相談を受け付けました。内容の整理を始めています。",
+      "created_at": "2026-05-02T15:47:11.991204+09:00"
+    }
+  ]
+}

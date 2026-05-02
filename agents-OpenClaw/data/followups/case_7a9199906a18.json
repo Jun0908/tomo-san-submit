@@ -1,0 +1,23 @@
+{
+  "id": "followup_732df494da28",
+  "case_id": "case_7a9199906a18",
+  "case_title": "今日のは天気",
+  "route": "secretary_action",
+  "route_label": "秘書対応",
+  "owner": "secretary",
+  "status": "pending",
+  "due_at": "2026-05-05T18:00:00+09:00",
+  "risk_level": "medium",
+  "requires_principal_decision": false,
+  "decision_options": [
+    "秘書から一次返信する",
+    "追加ヒアリングする",
+    "関連資料を集める"
+  ],
+  "decision_result": "",
+  "next_actions": [
+    "秘書から一次返信の下書きを作る",
+    "必要なら追加ヒアリングする"
+  ],
+  "updated_at": "2026-05-02T15:48:43.018925+09:00"
+}

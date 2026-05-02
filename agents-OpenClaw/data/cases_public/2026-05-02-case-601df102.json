@@ -1,0 +1,21 @@
+{
+  "id": "case_346c9ce8ec33",
+  "title": "交通量が多いです",
+  "summary": "交通量が多いです",
+  "location": "",
+  "tags": [
+    "交通安全"
+  ],
+  "created_at": "2026-05-02T15:51:07.336570+09:00",
+  "updated_at": "2026-05-02T15:51:07.336570+09:00",
+  "status_public": "受付済み",
+  "latest_public_message": "ご相談を受け付けました。内容の整理を始めています。",
+  "requires_user_input": true,
+  "public_timeline": [
+    {
+      "status": "受付済み",
+      "message": "ご相談を受け付けました。内容の整理を始めています。",
+      "created_at": "2026-05-02T15:51:07.336570+09:00"
+    }
+  ]
+}

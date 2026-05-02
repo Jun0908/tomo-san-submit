@@ -1,0 +1,24 @@
+{
+  "id": "followup_2ec1d87f0805",
+  "case_id": "case_82dac03f2c5f",
+  "case_title": "通学路が危険です",
+  "route": "principal_decision",
+  "route_label": "本人判断",
+  "owner": "principal",
+  "status": "needs_decision",
+  "due_at": "2026-05-04T18:00:00+09:00",
+  "risk_level": "medium",
+  "requires_principal_decision": true,
+  "decision_options": [
+    "秘書から一次返信する",
+    "担当課へ確認する",
+    "議会質問候補にする"
+  ],
+  "decision_result": "",
+  "next_actions": [
+    "本人判断を待つ",
+    "関連案件を確認する",
+    "事実確認前の発信を止める"
+  ],
+  "updated_at": "2026-05-02T15:47:05.190214+09:00"
+}

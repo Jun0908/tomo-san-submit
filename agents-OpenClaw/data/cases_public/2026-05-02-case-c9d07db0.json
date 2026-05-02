@@ -1,0 +1,22 @@
+{
+  "id": "case_52696e2b273e",
+  "title": "通学路が危険です",
+  "summary": "通学路が危険です",
+  "location": "",
+  "tags": [
+    "交通安全",
+    "教育"
+  ],
+  "created_at": "2026-05-02T15:47:11.991204+09:00",
+  "updated_at": "2026-05-02T15:47:11.991204+09:00",
+  "status_public": "受付済み",
+  "latest_public_message": "ご相談を受け付けました。内容の整理を始めています。",
+  "requires_user_input": true,
+  "public_timeline": [
+    {
+      "status": "受付済み",
+      "message": "ご相談を受け付けました。内容の整理を始めています。",
+      "created_at": "2026-05-02T15:47:11.991204+09:00"
+    }
+  ]
+}
