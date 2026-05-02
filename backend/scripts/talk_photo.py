@@ -147,6 +147,27 @@ def ensure_runtime() -> None:
         )
 
 
+def mux_audio_into_video(video: Path, audio: Path, output: Path) -> None:
+    """ffmpeg で音声トラックを動画に明示的に合成する。SadTalker が無音で出力する場合の対策。"""
+    result = subprocess.run(
+        [
+            'ffmpeg', '-y',
+            '-i', str(video),
+            '-i', str(audio),
+            '-map', '0:v:0',
+            '-map', '1:a:0',
+            '-c:v', 'copy',
+            '-c:a', 'aac',
+            '-shortest',
+            str(output),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr or result.stdout)
+
+
 def find_generated_mp4(stdout: str, run_dir: Path) -> Path:
     match = re.findall(r"The generated video is named:\s*(.+?\.mp4)", stdout)
     if match:
@@ -315,6 +336,15 @@ def main() -> int:
         raise SystemExit(completed.returncode)
 
     generated_mp4 = find_generated_mp4(completed.stdout, run_dir)
+
+    # SadTalker が無音 mp4 を出力するケースがあるため、ffmpeg で音声を明示合成する
+    muxed_mp4 = run_dir / "talking-head-muxed.mp4"
+    try:
+        mux_audio_into_video(generated_mp4, audio_path, muxed_mp4)
+        generated_mp4 = muxed_mp4
+    except Exception as exc:
+        print(f"[warn] 音声合成ステップをスキップ ({exc}); SadTalker 出力をそのまま使用します", file=sys.stderr)
+
     final_mp4 = run_dir / "talking-head.mp4"
     if generated_mp4.resolve() != final_mp4.resolve():
         if final_mp4.exists():

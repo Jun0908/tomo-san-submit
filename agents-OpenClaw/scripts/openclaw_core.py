@@ -224,16 +224,24 @@ def read_json_if_exists(path: Path, default=None):
         return default
 
 
+def _strip_surrogates(text: str) -> str:
+    """孤立サロゲート文字を除去して UTF-8 で安全な文字列にする。"""
+    return text.encode("utf-8", errors="replace").decode("utf-8")
+
+
 def write_json(path: Path, payload):
     """UTF-8 の整形済み JSON を書き込む。"""
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    path.write_text(
+        _strip_surrogates(json.dumps(payload, ensure_ascii=False, indent=2)),
+        encoding="utf-8",
+    )
 
 
 def write_markdown(path: Path, text: str):
     """UTF-8 の Markdown を書き込む。"""
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(text, encoding="utf-8")
+    path.write_text(_strip_surrogates(text), encoding="utf-8")
 
 
 def send_telegram_message(message: str, *, parse_mode: str | None = None) -> bool:

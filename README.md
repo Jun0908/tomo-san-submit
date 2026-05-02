@@ -62,7 +62,7 @@
 - **日次市民ダイジェスト**: 今日の相談件数・多いテーマ・緊急度の高い案件を1通にまとめる
 - **Telegram コマンド**: `/search 通学路`、`/case <id>`、`/today` で即検索・参照できる
 - **公開情報との連携**: 気仙沼市議会・市役所の RSS から関連情報を自動で拾って案件に紐づける
-- **活動報告下書き**: 面会メモと案件メモから報告の叩き台を生成する
+- **SNS・活動報告下書き**: 案件メモと公開情報をもとに Note 記事・Instagram キャプション・カルーセル構成・ハッシュタグをセットで生成する。ボランティアへの引き継ぎメモも同時に出力する
 
 ### 学習・最適化
 
@@ -81,6 +81,71 @@
 | 通知・操作 | Telegram Bot API |
 | 情報収集 | RSS (気仙沼市議会・市役所) |
 | ナレッジベース | Obsidian Markdown |
+| 人間確認 | World / Human Badge |
+| オンチェーン記録 | NEAR Protocol |
+
+---
+
+## World と NEAR の使われ方
+
+### World — 相談開始時の人間確認
+
+市民が「相談を始める」ボタンを押すと、**World Human Badge** による人間確認が走る。
+Bot や自動スクリプトからの偽相談を弾き、1人1案件の信頼性を担保する。
+
+```
+市民がボタンをクリック
+  → World Human Badge で本人確認（nullifier hash を取得）
+  → 確認済みフラグをセッションに保存
+  → 会話ページへ遷移
+```
+
+| 項目 | 内容 |
+|---|---|
+| 確認タイミング | 相談セッション作成前（`frontend/app/page.tsx`）|
+| APIルート | `frontend/app/api/world/verify/route.ts` |
+| クライアント処理 | `frontend/lib/world.ts` |
+| 保存先 | セッションの `world.verified` / `world.nullifierHash` |
+| UI表示 | 会話ページ・案件ページに「✅ 人間確認済み」バッジ |
+| デモモード | `NEXT_PUBLIC_ENABLE_DEMO_WORLD_VERIFY=true` で本物の Badge なしで動作 |
+
+---
+
+### NEAR — 案件化時のレシート記録
+
+市民の相談が OpenClaw によって案件化されると、**案件の公開メタデータのハッシュを NEAR チェーンに記録**する。
+生の相談テキストはオンチェーンに載せない。「この案件が確かに受理された」という証跡のみを残す。
+
+```
+「公開向け案件ページを作る」をクリック
+  → OpenClaw が案件を生成
+  → 公開メタデータを SHA-256 ハッシュ化
+  → NEAR にレシートを送信（txHash を取得）
+  → セッションに near.caseReceiptTxHash を保存
+  → 案件ページに「⛓ NEAR receipt」バッジ表示
+```
+
+| 項目 | 内容 |
+|---|---|
+| 記録タイミング | OpenClaw 案件生成の直後（`frontend/lib/server/store.ts`）|
+| 送信ロジック | `frontend/lib/server/near.ts` |
+| オンチェーンの内容 | sessionId, publicCaseId, title, summaryHash, worldVerified, タイムスタンプ |
+| オンチェーンに**載せない**もの | 相談の生テキスト・市民の個人情報 |
+| UI表示 | 会話ページ・案件ページに「⛓ NEAR: xxxx...」バッジ |
+| デモモード | `ENABLE_DEMO_NEAR_RECEIPT=true` で決定論的なモック txHash を返す |
+
+---
+
+### 環境変数
+
+`frontend/.env.local.example` を参照。デモ動作には以下の 2 行だけでよい：
+
+```bash
+NEXT_PUBLIC_ENABLE_DEMO_WORLD_VERIFY=true
+ENABLE_DEMO_NEAR_RECEIPT=true
+```
+
+本番化する場合は `WORLD_APP_ID` と `NEAR_ACCOUNT_ID` / `NEAR_PRIVATE_KEY` / `NEAR_CONTRACT_ID` を設定する。
 
 ---
 
